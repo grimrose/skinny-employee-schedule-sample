@@ -1,0 +1,44 @@
+-@val s: skinny.Skinny
+-@val keyAndErrorMessages: skinny.KeyAndErrorMessages
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+div(class="form-group")
+  label(class="control-label" for="name") #{s.i18n.get("plannedSchedule.name")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("name")) "has-error" else ""})
+      div(class="col-xs-6")
+        input(type="text" name="name" class="form-control" value={s.params.name})
+    - keyAndErrorMessages.get("name").map { errors =>
+      div(class="col-xs-6 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label" for="description") #{s.i18n.get("plannedSchedule.description")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("description")) "has-error" else ""})
+      div(class="col-xs-12")
+        input(type="text" name="description" class="form-control" value={s.params.description})
+    - keyAndErrorMessages.get("description").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label" for="other_details") #{s.i18n.get("plannedSchedule.otherDetails")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("other_details")) "has-error" else ""})
+      div(class="col-xs-12")
+        textarea(name="other_details" class="form-control" rows="3") = {s.params.other_details}
+    - keyAndErrorMessages.get("other_details").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-actions")
+  =unescape(s.csrfHiddenInputTag)
+  input(type="submit" class="btn btn-primary" value={s.i18n.get("submit")})
+    a(class="btn btn-default" href={s.url(Controllers.plannedSchedules.indexUrl)}) #{s.i18n.get("cancel")}

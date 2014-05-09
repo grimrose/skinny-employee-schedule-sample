@@ -1,0 +1,43 @@
+-@val item: model.Employee
+-@val s: skinny.Skinny
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+h3 #{s.i18n.get("employee.detail")}
+hr
+-for (notice <- s.flash.notice)
+  p(class="alert alert-info") #{notice}
+table(class="table table-bordered")
+  thead
+    tr
+      th #{s.i18n.get("employee.id")}
+      td #{item.id}
+    tr
+      th #{s.i18n.get("employee.firstName")}
+      td #{item.firstName}
+    tr
+      th #{s.i18n.get("employee.middleName")}
+      td #{item.middleName}
+    tr
+      th #{s.i18n.get("employee.lastName")}
+      td #{item.lastName}
+    tr
+      th #{s.i18n.get("employee.gender")}
+      td #{item.gender}
+    tr
+      th #{s.i18n.get("employee.startedEmployment")}
+      td #{item.startedEmployment}
+    tr
+      th #{s.i18n.get("employee.leftEmployment")}
+      td #{item.leftEmployment}
+    tr
+      th #{s.i18n.get("employee.otherDetail")}
+      td #{item.otherDetail}
+
+hr
+div(class="form-actions")
+  a(class="btn btn-default" href={s.url(Controllers.employees.indexUrl)}) #{s.i18n.get("backToList")}
+  a(href={s.url(Controllers.employees.editUrl, "id" -> item.id)} class="btn btn-info") #{s.i18n.get("edit")}
+  a(data-method="delete" data-confirm={s.i18n.get("employee.delete.confirm")} href={s.url(Controllers.employees.destroyUrl, "id" -> item.id)} rel="nofollow" class="btn btn-danger") #{s.i18n.get("delete")}

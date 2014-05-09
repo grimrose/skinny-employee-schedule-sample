@@ -1,0 +1,17 @@
+{
+  "name": "skinny-employee-schedule",
+  "version": "0.0.1",
+  "authors": [
+    "grimrose <grwin7@gmail.com>"
+  ],
+  "description": "schedule app",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "~3.0.0"
+  }
+}

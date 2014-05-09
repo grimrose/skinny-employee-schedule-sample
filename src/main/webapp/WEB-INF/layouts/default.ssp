@@ -7,6 +7,7 @@
     ${unescape(s.csrfMetaTags)}
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.0.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${uri("/assets/css/bootstrap-datetimepicker.min.css")}"/>
   </head>
   <body>
     <div class="container span12">
@@ -14,9 +15,10 @@
       <hr/>
       <a class="btn btn-default" href="${uri("/")}">${s.i18n.get("top")}</a>
     </div>
+    <script type="text/javascript" src="${uri("/assets/js/moment-with-langs.min.js")}"></script>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${uri("/assets/js/bootstrap-datetimepicker.min.js")}"></script>
     <script type="text/javascript" src="${uri("/assets/js/skinny-framework.js")}"></script>
   </body>
 </html>
-
 

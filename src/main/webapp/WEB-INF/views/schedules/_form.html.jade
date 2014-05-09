@@ -1,0 +1,83 @@
+-@val s: skinny.Skinny
+-@val keyAndErrorMessages: skinny.KeyAndErrorMessages
+
+-@val plannedSchedules: List[model.PlannedSchedule]
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+div(class="form-group")
+  label(class="control-label" for="planned_schedule_id") #{s.i18n.get("schedule.plannedScheduleId")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("planned_schedule_id")) "has-error" else ""})
+      div(class="col-xs-6")
+        select(class="form-control" name="planned_schedule_id")
+          -for(plannedSchedule <- plannedSchedules)
+            option(value="#{plannedSchedule.id}" selected = {s.params.planned_schedule_id == plannedSchedule.id}) = {plannedSchedule.name}
+    - keyAndErrorMessages.get("planned_schedule_id").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label") #{s.i18n.get("schedule.start")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("start")) "has-error" else ""})
+      div(class="col-xs-4")
+        div.input-group.date#startDateTimePicker
+          input(type="text" class="form-control" id="startDateTime")
+            span(class="input-group-addon")
+              span(class="glyphicon glyphicon-calendar")
+        input(type="hidden" name="start_year"   value={s.params.start_year}   placeholder={s.i18n.get("year")}   maxlength=4)
+        input(type="hidden" name="start_month"  value={s.params.start_month}  placeholder={s.i18n.get("month")}  maxlength=2)
+        input(type="hidden" name="start_day"    value={s.params.start_day}    placeholder={s.i18n.get("day")}    maxlength=2)
+        input(type="hidden" name="start_hour"   value={s.params.start_hour}   placeholder={s.i18n.get("hour")}   maxlength=2)
+        input(type="hidden" name="start_minute" value={s.params.start_minute} placeholder={s.i18n.get("minute")} maxlength=2)
+        input(type="hidden" name="start_second" value={s.params.start_second} placeholder={s.i18n.get("second")} maxlength=2)
+        input(type="hidden" id="startMoment")
+    - keyAndErrorMessages.get("start").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+    button(type="button" class="btn btn-default" id="startClearButton") = "clear"
+div(class="form-group")
+  label(class="control-label") #{s.i18n.get("schedule.end")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("end")) "has-error" else ""})
+      div(class="col-xs-4")
+        div.input-group.date#endDateTimePicker
+          input(type="text" class="form-control" id="endDateTime")
+            span(class="input-group-addon")
+              span(class="glyphicon glyphicon-calendar")
+        input(type="hidden" name="end_year"   value={s.params.end_year}   placeholder={s.i18n.get("year")}   maxlength=4)
+        input(type="hidden" name="end_month"  value={s.params.end_month}  placeholder={s.i18n.get("month")}  maxlength=2)
+        input(type="hidden" name="end_day"    value={s.params.end_day}    placeholder={s.i18n.get("day")}    maxlength=2)
+        input(type="hidden" name="end_hour"   value={s.params.end_hour}   placeholder={s.i18n.get("hour")}   maxlength=2)
+        input(type="hidden" name="end_minute" value={s.params.end_minute} placeholder={s.i18n.get("minute")} maxlength=2)
+        input(type="hidden" name="end_second" value={s.params.end_second} placeholder={s.i18n.get("second")} maxlength=2)
+        input(type="hidden" id="endMoment")
+    - keyAndErrorMessages.get("end").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+    button(type="button" class="btn btn-default" id="endClearButton") = "clear"
+div(class="form-group")
+  label(class="control-label" for="other_details") #{s.i18n.get("schedule.otherDetails")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("other_details")) "has-error" else ""})
+      div(class="col-xs-12")
+        textarea(name="other_details" class="form-control" rows="3") = {s.params.other_details}
+    - keyAndErrorMessages.get("other_details").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-actions")
+  =unescape(s.csrfHiddenInputTag)
+  input(type="submit" class="btn btn-primary" value={s.i18n.get("submit")})
+    a(class="btn btn-default" href={s.url(Controllers.schedules.indexUrl)}) #{s.i18n.get("cancel")}
+
+script(type="text/javascript" src="/assets/js/schedules.js")

@@ -1,0 +1,44 @@
+-@val s: skinny.Skinny
+-@val items: Seq[model.PlannedSchedule]
+-@val totalPages: Int
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+h3 #{s.i18n.get("plannedSchedule.list")}
+hr
+-for (notice <- s.flash.notice)
+  p(class="alert alert-info") #{notice}
+
+- if (totalPages > 1)
+  ul.pagination
+    li
+      a(href={s.url(Controllers.plannedSchedules.indexUrl, "page" -> 1)}) &laquo;
+    - for (i <- (1 to totalPages))
+      li
+        a(href={s.url(Controllers.plannedSchedules.indexUrl, "page" -> i)}) #{i}
+    li
+      a(href={s.url(Controllers.plannedSchedules.indexUrl, "page" -> totalPages)}) &raquo;
+
+table(class="table table-bordered")
+  thead
+    tr
+      th #{s.i18n.get("plannedSchedule.id")}
+      th #{s.i18n.get("plannedSchedule.name")}
+      th #{s.i18n.get("plannedSchedule.description")}
+      th #{s.i18n.get("plannedSchedule.otherDetails")}
+      th
+  tbody
+  -for (item <- items)
+    tr
+      td #{item.id}
+      td #{item.name}
+      td #{item.description}
+      td #{item.otherDetails}
+      td
+        a(href={s.url(Controllers.plannedSchedules.showUrl, "id" -> item.id)} class="btn btn-default") #{s.i18n.get("detail")}
+        a(href={s.url(Controllers.plannedSchedules.editUrl, "id" -> item.id)} class="btn btn-info") #{s.i18n.get("edit")}
+        a(data-method="delete" data-confirm={s.i18n.get("plannedSchedule.delete.confirm")} href={s.url(Controllers.plannedSchedules.destroyUrl, "id" -> item.id)} rel="nofollow" class="btn btn-danger") #{s.i18n.get("delete")}
+
+a(href={s.url(Controllers.plannedSchedules.newUrl)} class="btn btn-primary") #{s.i18n.get("new")}

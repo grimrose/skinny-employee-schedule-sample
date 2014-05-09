@@ -1,0 +1,60 @@
+<%@val employee: model.Employee %>
+<%@val s: skinny.Skinny %>
+
+<%-- Be aware of package imports.
+ 1. src/main/scala/templates/ScalatePackage.scala
+ 2. scalateTemplateConfig in project/Build.scala
+--%>
+
+<h3>${s.i18n.get("employeeSchedule.detail")}</h3>
+<hr/>
+#for (notice <- s.flash.notice)
+  <p class="alert alert-info">${notice}</p>
+#end
+<table class="table table-bordered">
+<thead>
+  <tr>
+    <th>${s.i18n.get("employeeSchedule.id")}</th>
+    <td>${employee.id}</td>
+  </tr>
+  <tr>
+    <th>${s.i18n.get("employeeSchedule.employeeId")}</th>
+    <td>${employee.fullName}</td>
+  </tr>
+</tbody>
+</table>
+
+<hr/>
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th>${s.i18n.get("schedule.id")}</th>
+        <th>${s.i18n.get("plannedSchedule.name")}</th>
+        <th>${s.i18n.get("schedule.start")}</th>
+        <th>${s.i18n.get("schedule.end")}</th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+    #for (schedule <- employee.schedules)
+        <tr>
+            <td>${schedule.id}</td>
+            <td>${schedule.plannedSchedule.fold("")(_.name)}</td>
+            <td>${schedule.start.toString("yyyy-MM-dd HH:MM")}</td>
+            <td>${schedule.end.fold("")(_.toString("yyyy-MM-dd HH:MM"))}</td>
+            <td>
+                <a href="${s.url(Controllers.employeesSchedules.showUrl, "employeeId" -> employee.id, "scheduleId" -> schedule.id)}" class="btn btn-default">${s.i18n.get("detail")}</a>
+                <a data-method="delete" data-confirm="${s.i18n.get("employeeSchedule.delete.confirm")}"
+                    href="${s.url(Controllers.employeesSchedules.destroyUrl, "employeeId" -> employee.id, "scheduleId" -> schedule.id)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
+            </td>
+        </tr>
+    #end
+</tbody>
+</table>
+
+<a href="${s.url(Controllers.employeesSchedules.employeesNewUrl, "employeeId" -> employee.id)}" class="btn btn-primary">${s.i18n.get("new")}</a>
+
+<hr/>
+<div class="form-actions">
+  <a class="btn btn-default" href="${s.url(Controllers.employeesSchedules.employeesUrl)}">${s.i18n.get("backToList")}</a>
+</div>

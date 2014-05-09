@@ -64,4 +64,5 @@ logs
 # Skinny's default ivy.home
 ivy2
 
-
+bower_components
+.sbtconfig

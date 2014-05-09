@@ -1,0 +1,32 @@
+<%@val item: model.EmployeeSchedule %>
+<%@val s: skinny.Skinny %>
+
+<%-- Be aware of package imports.
+ 1. src/main/scala/templates/ScalatePackage.scala
+ 2. scalateTemplateConfig in project/Build.scala
+--%>
+
+<h3>${s.i18n.get("employeeSchedule.detail")}</h3>
+<hr/>
+#for (notice <- s.flash.notice)
+    <p class="alert alert-info">${notice}</p>
+#end
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th>${s.i18n.get("employeeSchedule.employeeId")}</th>
+        <td>${item.employeeId}:&nbsp;${item.employee.fold("")(_.fullName)}</td>
+    </tr>
+    <tr>
+        <th>${s.i18n.get("employeeSchedule.scheduleId")}</th>
+        <td>${item.scheduleId}:&nbsp;${item.schedule.fold("")(_.plannedSchedule.fold("")(_.name))}</td>
+    </tr>
+</tbody>
+</table>
+
+<hr/>
+<div class="form-actions">
+    <a class="btn btn-default" href="${s.url(Controllers.employeesSchedules.indexUrl)}">${s.i18n.get("backToList")}</a>
+    <a data-method="delete" data-confirm="${s.i18n.get("employeeSchedule.delete.confirm")}"
+        href="${s.url(Controllers.employeesSchedules.destroyUrl, "employeeId" -> item.employeeId, "scheduleId" -> item.scheduleId)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
+</div>

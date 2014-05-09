@@ -15,16 +15,14 @@ object SkinnyAppBuild extends Build {
   // -------------------------------------------------------
 
   val appOrganization = "org.skinny-framework"
-  val appName = "skinny-blank-app"
+  val appName = "skinny-human-schedule"
   val appVersion = "0.1.0-SNAPSHOT"
 
-  val skinnyVersion = "1.0.12"
+  val skinnyVersion = "1.0.17"
   val scalatraVersion = "2.2.2"
   val theScalaVersion = "2.10.3"
-
-  // We choose Jetty 8 as default for Java 6(!) users. 
-  // Jetty 9 is preferred but 9.1 looks very slow in some cases.
-  //val jettyVersion = "9.0.7.v20131107"
+  //val jettyVersion = "9.2.0.v20140526"
+  // Your project runs on Java 6, choose Jetty 8 instead.
   val jettyVersion = "8.1.10.v20130312"
 
   lazy val baseSettings = Defaults.defaultSettings ++ ScalatraPlugin.scalatraWithJRebel ++ herokuSettings ++ Seq(
@@ -36,7 +34,7 @@ object SkinnyAppBuild extends Build {
       "org.skinny-framework"    %% "skinny-framework"    % skinnyVersion,
       "org.skinny-framework"    %% "skinny-assets"       % skinnyVersion,
       "org.skinny-framework"    %% "skinny-task"         % skinnyVersion,
-      "com.h2database"          %  "h2"                  % "1.4.177",      // your own JDBC driver
+      "com.h2database"          %  "h2"                  % "1.4.178",      // your own JDBC driver
       "ch.qos.logback"          %  "logback-classic"     % "1.1.2",
       // To fix java.lang.ClassNotFoundException: scala.collection.Seq when running tests
       "org.scala-lang"          %  "scala-library"       % theScalaVersion      % "test",
@@ -53,12 +51,10 @@ object SkinnyAppBuild extends Build {
     ),
     resolvers ++= Seq(
       "sonatype releases"  at "https://oss.sonatype.org/content/repositories/releases"
-      // Only when you use SNAPSHOT versions, activate following resolver
       //,"sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
     ),
     // Faster "./skinny idea" 
-    // If you need source code, specify Seq(Artifact.SourceClassifier) instead
-    transitiveClassifiers in Global := Seq(""),
+    transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     // the name-hashing algorithm for the incremental compiler.
     incOptions := incOptions.value.withNameHashing(true),
     logBuffered in Test := false,
@@ -138,9 +134,7 @@ object SkinnyAppBuild extends Build {
   // -------------------------------------------------------
 
   lazy val stage = taskKey[Unit]("Dummy stage task to keep Heroku happy")
-  lazy val herokuSettings = Seq(
-    stage        := { "heroku/stage" ! }
-  )
+  lazy val herokuSettings = Seq(stage := { "heroku/stage" ! })
 
 }
 

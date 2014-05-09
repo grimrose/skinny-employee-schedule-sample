@@ -4,3 +4,37 @@
 Your first Skinny app works!
 </p>
 
+<hr/>
+
+
+<div>
+    <div>
+        <p>Masters</p>
+    </div>
+    <div>
+        <ul>
+            <li>
+                <a href="/employees">employee</a>
+            </li>
+            <li>
+                <a href="/schedules">schedule</a>
+            </li>
+            <li>
+                <a href="/planned_schedules">planned schedule</a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        Entries
+    </div>
+    <div>
+        <ul>
+            <li>
+                <a href="/employees_schedules">employee schedule</a>
+            </li>
+            <li>
+                <a href="/employees_schedules/employees">employees</a>
+            </li>
+        </ul>
+    </div>
+</div>

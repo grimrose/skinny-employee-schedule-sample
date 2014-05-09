@@ -1,0 +1,34 @@
+-@val item: model.Schedule
+-@val s: skinny.Skinny
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+h3 #{s.i18n.get("schedule.detail")}
+hr
+-for (notice <- s.flash.notice)
+  p(class="alert alert-info") #{notice}
+table(class="table table-bordered")
+  thead
+    tr
+      th #{s.i18n.get("schedule.id")}
+      td #{item.id}
+    tr
+      th #{s.i18n.get("schedule.plannedScheduleId")}
+      td #{item.plannedScheduleId}
+    tr
+      th #{s.i18n.get("schedule.start")}
+      td #{item.start}
+    tr
+      th #{s.i18n.get("schedule.end")}
+      td #{item.end}
+    tr
+      th #{s.i18n.get("schedule.otherDetails")}
+      td #{item.otherDetails}
+
+hr
+div(class="form-actions")
+  a(class="btn btn-default" href={s.url(Controllers.schedules.indexUrl)}) #{s.i18n.get("backToList")}
+  a(href={s.url(Controllers.schedules.editUrl, "id" -> item.id)} class="btn btn-info") #{s.i18n.get("edit")}
+  a(data-method="delete" data-confirm={s.i18n.get("schedule.delete.confirm")} href={s.url(Controllers.schedules.destroyUrl, "id" -> item.id)} rel="nofollow" class="btn btn-danger") #{s.i18n.get("delete")}

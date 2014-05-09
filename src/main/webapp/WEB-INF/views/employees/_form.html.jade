@@ -1,0 +1,110 @@
+-@val s: skinny.Skinny
+-@val keyAndErrorMessages: skinny.KeyAndErrorMessages
+
+-@val genderElements: List[model.Gender]
+
+-# Be aware of package imports.
+-# 1. src/main/scala/templates/ScalatePackage.scala
+-# 2. scalateTemplateConfig in project/Build.scala
+
+div(class="form-group")
+  label(class="control-label" for="first_name") #{s.i18n.get("employee.firstName")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("first_name")) "has-error" else ""})
+      div(class="col-xs-4")
+        input(type="text" name="first_name" class="form-control" value={s.params.first_name})
+    - keyAndErrorMessages.get("first_name").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label" for="middle_name") #{s.i18n.get("employee.middleName")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("middle_name")) "has-error" else ""})
+      div(class="col-xs-4")
+        input(type="text" name="middle_name" class="form-control" value={s.params.middle_name})
+    - keyAndErrorMessages.get("middle_name").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label" for="last_name") #{s.i18n.get("employee.lastName")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("last_name")) "has-error" else ""})
+      div(class="col-xs-4")
+        input(type="text" name="last_name" class="form-control" value={s.params.last_name})
+    - keyAndErrorMessages.get("last_name").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label" for="gender") #{s.i18n.get("employee.gender")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("gender")) "has-error" else ""})
+      div(class="col-xs-2")
+        select(class="form-control" name="gender")
+          -for(element <- genderElements)
+            option(value="#{element.code}" selected = {s.params.gender == element.code}) = {element}
+    - keyAndErrorMessages.get("gender").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-group")
+  label(class="control-label") #{s.i18n.get("employee.startedEmployment")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("started_employment")) "has-error" else ""})
+      div(class="col-xs-3")
+        div.input-group.date#startedDatePicker
+          input(type="text" class="form-control" id="startedDate")
+            span(class="input-group-addon")
+              span(class="glyphicon glyphicon-calendar")
+        input(type="hidden" name="started_employment_year"   value={s.params.started_employment_year}   placeholder={s.i18n.get("year")}   maxlength=4)
+        input(type="hidden" name="started_employment_month"  value={s.params.started_employment_month}  placeholder={s.i18n.get("month")}  maxlength=2)
+        input(type="hidden" name="started_employment_day"    value={s.params.started_employment_day}    placeholder={s.i18n.get("day")}    maxlength=2)
+        input(type="hidden" id="startedMoment")
+    - keyAndErrorMessages.get("started_employment").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+    button(type="button" class="btn btn-default" id="startedClearButton") = "clear"
+div(class="form-group")
+  label(class="control-label") #{s.i18n.get("employee.leftEmployment")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("left_employment")) "has-error" else ""})
+      div(class="col-xs-3")
+        div.input-group.date#leftDatePicker
+          input(type="text" class="form-control" id="leftDate")
+            span(class="input-group-addon")
+              span(class="glyphicon glyphicon-calendar")
+        input(type="hidden" name="left_employment_year"   value={s.params.left_employment_year}   placeholder={s.i18n.get("year")}   maxlength=4)
+        input(type="hidden" name="left_employment_month"  value={s.params.left_employment_month}  placeholder={s.i18n.get("month")}  maxlength=2)
+        input(type="hidden" name="left_employment_day"    value={s.params.left_employment_day}    placeholder={s.i18n.get("day")}    maxlength=2)
+        input(type="hidden" id="leftMoment")
+    - keyAndErrorMessages.get("left_employment").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+    button(type="button" class="btn btn-default" id="leftClearButton") = "clear"
+div(class="form-group")
+  label(class="control-label" for="other_detail") #{s.i18n.get("employee.otherDetail")}
+  div(class="controls row")
+    div(class={if(keyAndErrorMessages.hasErrors("other_detail")) "has-error" else ""})
+      div(class="col-xs-12")
+        textarea(name="other_details" class="form-control" rows="3") = {s.params.other_details}
+    - keyAndErrorMessages.get("other_detail").map { errors =>
+      div(class="col-xs-12 has-error")
+        - for (error <- errors)
+          label(class="control-label") #{error}
+    - }
+div(class="form-actions")
+  =unescape(s.csrfHiddenInputTag)
+  input(type="submit" class="btn btn-primary" value={s.i18n.get("submit")})
+    a(class="btn btn-default" href={s.url(Controllers.employees.indexUrl)}) #{s.i18n.get("cancel")}
+
+script(type="text/javascript" src="/assets/js/employees.js")
