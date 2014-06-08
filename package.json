@@ -1,10 +1,10 @@
 {
-  "name": "skinny-employee-schedule",
+  "name": "skinny-employee-schedule-sample",
   "version": "0.0.1",
-  "description": "Schedule app",
+  "description": "Schedule sample app",
   "repository": {
     "type": "git",
-    "url": "git@github.com:grimrose/skinny-human-schedule.git"
+    "url": "git@github.com:grimrose/skinny-employee-schedule-sample.git"
   }
 }
 
