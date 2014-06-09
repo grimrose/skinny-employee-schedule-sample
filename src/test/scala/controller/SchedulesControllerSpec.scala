@@ -71,7 +71,7 @@ class SchedulesControllerSpec extends FunSpec with ShouldMatchers with DBSetting
         controller.prepareParams() // no parameters
         controller.createResource()
         controller.status should equal(400)
-        controller.errorMessages.size should be >(0)
+        controller.errorMessages.size should be > (0)
       }
     }
 
@@ -80,7 +80,7 @@ class SchedulesControllerSpec extends FunSpec with ShouldMatchers with DBSetting
       val controller = createMockController
       controller.editResource(schedule.id)
       controller.status should equal(200)
-        controller.renderCall.map(_.path) should equal(Some("/schedules/edit"))
+      controller.renderCall.map(_.path) should equal(Some("/schedules/edit"))
     }
 
     it("updates a schedule") {

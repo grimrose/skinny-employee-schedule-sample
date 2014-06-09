@@ -24,7 +24,7 @@ addSbtPlugin("com.mojolly.scalate" % "xsbt-scalate-generator" % "0.5.0")
 // scalarifrom for code formatting
 // NOTE: Disabled by default because this is confusing for beginners
 //
-//addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
 
 // --------
 // scoverage for test coverage (./skinny test:coverage)

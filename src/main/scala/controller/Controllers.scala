@@ -47,7 +47,7 @@ object Controllers {
     val employeesNewUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/new")(employeeNewAction).as('employeesNew)
     val employeesCreateUrl = post(s"${resourcesBasePath}/employees/:employeeId/schedules")(createResource).as('employeesCreate)
 
-//    val schedulesUrl = get("/employees_schedules/schedules/")(scheduleAction).as('schedules)
+    //    val schedulesUrl = get("/employees_schedules/schedules/")(scheduleAction).as('schedules)
   }
 
 }

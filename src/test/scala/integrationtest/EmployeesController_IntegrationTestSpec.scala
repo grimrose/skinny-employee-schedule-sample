@@ -62,9 +62,9 @@ class EmployeesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
       "started_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
       "left_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
       "other_detail" -> "dummy") {
-      logBodyUnless(403)
-      status should equal(403)
-    }
+        logBodyUnless(403)
+        status should equal(403)
+      }
 
     withSession("csrf-token" -> "valid_token") {
       post(s"/employees",
@@ -76,11 +76,11 @@ class EmployeesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
         "left_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
         "other_detail" -> "dummy",
         "csrf-token" -> "valid_token") {
-        logBodyUnless(302)
-        status should equal(302)
-        val id = header("Location").split("/").last.toLong
-        Employee.findById(id).isDefined should equal(true)
-      }
+          logBodyUnless(302)
+          status should equal(302)
+          val id = header("Location").split("/").last.toLong
+          Employee.findById(id).isDefined should equal(true)
+        }
     }
   }
 
@@ -100,9 +100,9 @@ class EmployeesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
       "started_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
       "left_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
       "other_detail" -> "dummy") {
-      logBodyUnless(403)
-      status should equal(403)
-    }
+        logBodyUnless(403)
+        status should equal(403)
+      }
 
     withSession("csrf-token" -> "valid_token") {
       put(s"/employees/${newEmployee.id}",
@@ -114,9 +114,9 @@ class EmployeesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
         "left_employment" -> skinny.util.DateTimeUtil.toString(new LocalDate()),
         "other_detail" -> "dummy",
         "csrf-token" -> "valid_token") {
-        logBodyUnless(302)
-        status should equal(302)
-      }
+          logBodyUnless(302)
+          status should equal(302)
+        }
     }
   }
 

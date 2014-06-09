@@ -1,7 +1,7 @@
 // ------------------------------
 // Automated code formatter before compilaion
 // Disabled by default because this is confusing for beginners
-//scalariformSettings
+scalariformSettings
 
 // ------------------------------
 // for ./skinny test:coverage

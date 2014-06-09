@@ -2,7 +2,7 @@ package controller
 
 import skinny._
 import skinny.validator._
-import model.{Gender, Employee}
+import model.{ Gender, Employee }
 
 class EmployeesController extends SkinnyResource with ApplicationController {
   protectFromForgery()

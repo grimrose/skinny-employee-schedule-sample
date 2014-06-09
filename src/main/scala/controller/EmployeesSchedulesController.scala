@@ -2,7 +2,7 @@ package controller
 
 import skinny._
 import skinny.validator._
-import model.{Employee, Schedule, EmployeeSchedule}
+import model.{ Employee, Schedule, EmployeeSchedule }
 import skinny.controller.feature.RequestScopeFeature
 
 class EmployeesSchedulesController extends ApplicationController {
@@ -118,17 +118,16 @@ class EmployeesSchedulesController extends ApplicationController {
   }
 
   def debugLoggingParameters(form: MapValidator, id: Option[Long] = None) = {
-    val forId = id.map { id => s" for [id -> ${id}]"}.getOrElse("")
-    val params = form.paramMap.map { case (name, value) => s"${name} -> '${value}'"}.mkString("[", ", ", "]")
+    val forId = id.map { id => s" for [id -> ${id}]" }.getOrElse("")
+    val params = form.paramMap.map { case (name, value) => s"${name} -> '${value}'" }.mkString("[", ", ", "]")
     logger.debug(s"Parameters${forId}: ${params}")
   }
 
   def debugLoggingPermittedParameters(parameters: PermittedStrongParameters, id: Option[Long] = None) = {
-    val forId = id.map { id => s" for [id -> ${id}]"}.getOrElse("")
-    val params = parameters.params.map { case (name, (v, t)) => s"${name} -> '${v}' as ${t}"}.mkString("[", ", ", "]")
+    val forId = id.map { id => s" for [id -> ${id}]" }.getOrElse("")
+    val params = parameters.params.map { case (name, (v, t)) => s"${name} -> '${v}' as ${t}" }.mkString("[", ", ", "]")
     logger.debug(s"Permitted parameters${forId}: ${params}")
   }
-
 
   def employeeAction()(implicit format: Format = Format.HTML): Any = withFormat(format) {
     if (enablePagination) {
@@ -143,7 +142,6 @@ class EmployeesSchedulesController extends ApplicationController {
     }
     render(s"${viewsDirectoryPath}/employees/index")
   }
-
 
   def employeeShowAction = {
     val employeeId = params.getAsOrElse[Long]("employeeId", -1)

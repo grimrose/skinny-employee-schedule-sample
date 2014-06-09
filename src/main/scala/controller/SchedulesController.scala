@@ -2,7 +2,7 @@ package controller
 
 import skinny._
 import skinny.validator._
-import model.{PlannedSchedule, Schedule}
+import model.{ PlannedSchedule, Schedule }
 import skinny.controller.Params
 
 class SchedulesController extends SkinnyResource with ApplicationController {

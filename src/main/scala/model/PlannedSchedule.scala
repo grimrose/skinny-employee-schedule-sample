@@ -11,8 +11,7 @@ case class PlannedSchedule(
   description: Option[String] = None,
   otherDetails: Option[String] = None,
   createdAt: DateTime,
-  updatedAt: DateTime
-)
+  updatedAt: DateTime)
 
 object PlannedSchedule extends SkinnyCRUDMapper[PlannedSchedule] with TimestampsFeature[PlannedSchedule] {
   override lazy val tableName = "planned_schedules"

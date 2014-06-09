@@ -74,9 +74,9 @@ class EmployeesSchedulesController_IntegrationTestSpec extends ScalatraFlatSpec 
     post(s"/employees_schedules",
       "employee_id" -> employee.id.toString,
       "schedule_id" -> schedule.id.toString) {
-      logBodyUnless(403)
-      status should equal(403)
-    }
+        logBodyUnless(403)
+        status should equal(403)
+      }
 
     withSession("csrf-token" -> "valid_token") {
       val employee = newEmployee
@@ -85,10 +85,10 @@ class EmployeesSchedulesController_IntegrationTestSpec extends ScalatraFlatSpec 
         "employee_id" -> employee.id.toString,
         "schedule_id" -> schedule.id.toString,
         "csrf-token" -> "valid_token") {
-        logBodyUnless(302)
-        status should equal(302)
-        EmployeeSchedule.findByEmployeeIdAndScheduleId(employee.id, schedule.id).isDefined should equal(true)
-      }
+          logBodyUnless(302)
+          status should equal(302)
+          EmployeeSchedule.findByEmployeeIdAndScheduleId(employee.id, schedule.id).isDefined should equal(true)
+        }
     }
   }
 

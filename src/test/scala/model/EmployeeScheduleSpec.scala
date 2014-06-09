@@ -2,12 +2,11 @@ package model
 
 import org.scalatest.fixture
 import org.scalatest.matchers.ShouldMatchers
-import skinny.{StrongParameters, ParamType, PermittedStrongParameters, DBSettings}
+import skinny.{ StrongParameters, ParamType, PermittedStrongParameters, DBSettings }
 import scalikejdbc.scalatest.AutoRollback
 import scalikejdbc.DBSession
 import scalikejdbc.SQLInterpolation._
 import skinny.test.FactoryGirl
-
 
 class EmployeeScheduleSpec extends fixture.FunSpec with ShouldMatchers with DBSettings with AutoRollback {
   override def fixture(implicit session: DBSession): Unit = {
@@ -17,14 +16,12 @@ class EmployeeScheduleSpec extends fixture.FunSpec with ShouldMatchers with DBSe
     delete.from(PlannedSchedule).toSQL.execute().apply()
   }
 
-
   describe("EmployeeSchedule") {
     it("should insert") { implicit session =>
       val employee: Employee = FactoryGirl.apply(Employee).create()
       val plannedSchedule: PlannedSchedule = FactoryGirl.apply(PlannedSchedule).create()
       val schedule: Schedule = FactoryGirl.apply(Schedule).withAttributes('plannedScheduleId -> plannedSchedule.id).create()
       EmployeeSchedule.createWithAttributes('employeeId -> employee.id, 'scheduleId -> schedule.id)
-
 
       Employee.joins(Employee.schedulesRef).findById(employee.id).map(_.schedules).get.map(_.id) should equal(Seq(schedule.id))
       Schedule.joins(Schedule.employeesRef).findById(schedule.id).map(_.employees).get.map(_.id) should be(Seq(employee.id))
