@@ -5,9 +5,9 @@ Run Skinny app now!
     ./skinny db:migrate
     ./skinny run
 
-### Date Model
+### Data Model
 
-Date Model for Employees Schedules
+Data Model for Employees Schedules
 
 http://www.databaseanswers.org/data_models/employees_schedules/index.htm
 
