@@ -16,15 +16,15 @@
 #if (totalPages > 1)
   <ul class="pagination">
     <li>
-      <a href="${s.url(Controllers.employeesSchedules.employeesUrl, "page" -> 1)}">&laquo;</a>
+      <a href="${s.url(Controllers.assignments.employeesUrl, "page" -> 1)}">&laquo;</a>
     </li>
     #for (i <- (1 to totalPages))
       <li>
-        <a href="${s.url(Controllers.employeesSchedules.employeesUrl, "page" -> i)}">${i}</a>
+        <a href="${s.url(Controllers.assignments.employeesUrl, "page" -> i)}">${i}</a>
       </li>
     #end
     <li>
-      <a href="${s.url(Controllers.employeesSchedules.employeesUrl, "page" -> totalPages)}">&raquo;</a>
+      <a href="${s.url(Controllers.assignments.employeesUrl, "page" -> totalPages)}">&raquo;</a>
     </li>
   </ul>
 #end
@@ -43,7 +43,7 @@
     <td>${employee.id}</td>
     <td>${employee.fullName}</td>
     <td>
-      <a href="${s.url(Controllers.employeesSchedules.employeesShowUrl, "employeeId" -> employee.id)}" class="btn btn-default">${s.i18n.get("detail")}</a>
+      <a href="${s.url(Controllers.assignments.employeesShowUrl, "employeeId" -> employee.id)}" class="btn btn-default">${s.i18n.get("detail")}</a>
     </td>
   </tr>
   #end

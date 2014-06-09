@@ -57,5 +57,5 @@
 <div class="form-actions">
   ${unescape(s.csrfHiddenInputTag)}
   <input type="submit" class="btn btn-primary" value="${s.i18n.get("submit")}">
-  <a class="btn btn-default" href="${s.url(Controllers.employeesSchedules.employeesShowUrl, "employeeId" -> employee.id)}">${s.i18n.get("cancel")}</a>
+  <a class="btn btn-default" href="${s.url(Controllers.assignments.employeesShowUrl, "employeeId" -> employee.id)}">${s.i18n.get("cancel")}</a>
 </div>

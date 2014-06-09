@@ -25,7 +25,7 @@ Your first Skinny app works!
         </ul>
     </div>
     <div>
-        Entries
+        <p>Entries</p>
     </div>
     <div>
         <ul>
@@ -33,7 +33,7 @@ Your first Skinny app works!
                 <a href="/employees_schedules">employee schedule</a>
             </li>
             <li>
-                <a href="/employees_schedules/employees">employees</a>
+                <a href="/assignments">assignments</a>
             </li>
         </ul>
     </div>

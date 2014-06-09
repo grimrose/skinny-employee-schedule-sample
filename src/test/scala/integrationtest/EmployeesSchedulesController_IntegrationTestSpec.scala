@@ -61,13 +61,6 @@ class EmployeesSchedulesController_IntegrationTestSpec extends ScalatraFlatSpec 
     }
   }
 
-  it should "show new entry form" in {
-    get(s"/employees_schedules/new") {
-      logBodyUnless(200)
-      status should equal(200)
-    }
-  }
-
   it should "create a employee schedule" in {
     val employee = newEmployee
     val schedule = newSchedule
@@ -89,21 +82,6 @@ class EmployeesSchedulesController_IntegrationTestSpec extends ScalatraFlatSpec 
           status should equal(302)
           EmployeeSchedule.findByEmployeeIdAndScheduleId(employee.id, schedule.id).isDefined should equal(true)
         }
-    }
-  }
-
-  it should "delete a employee schedule" in {
-    val employeeSchedule = newEmployeeSchedule
-    delete(s"/employees_schedules/employees/${employeeSchedule.employeeId}/schedules/${employeeSchedule.scheduleId}") {
-      logBodyUnless(403)
-      status should equal(403)
-    }
-    withSession("csrf-token" -> "valid_token") {
-      val employeeSchedule1 = newEmployeeSchedule
-      delete(s"/employees_schedules/employees/${employeeSchedule1.employeeId}/schedules/${employeeSchedule1.scheduleId}?csrf-token=valid_token") {
-        logBodyUnless(200)
-        status should equal(200)
-      }
     }
   }
 

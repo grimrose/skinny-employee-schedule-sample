@@ -72,8 +72,6 @@ class EmployeesSchedulesController extends ApplicationController {
     }
   }) getOrElse haltWithBody(404)
 
-  def newResource = render(s"${viewsDirectoryPath}/new")
-
   def createParams: Params = Params(params)
 
   def createForm = validation(createParams,
@@ -103,20 +101,6 @@ class EmployeesSchedulesController extends ApplicationController {
     }
   }
 
-  def destroyResource(employeeId: Long, scheduleId: Long) = {
-    EmployeeSchedule.findByEmployeeIdAndScheduleId(employeeId, scheduleId).map { item =>
-      EmployeeSchedule.deleteByEmployeeIdAndScheduleId(employeeId, scheduleId)
-      flash += ("notice" -> createI18n().get(s"${resourceName}.flash.deleted").getOrElse(s"The ${resourceName} was deleted."))
-      status = 200
-    } getOrElse haltWithBody(404)
-  }
-
-  def destroyAction = {
-    val employeeId = params.getAsOrElse[Long]("employeeId", -1)
-    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
-    destroyResource(employeeId, scheduleId)
-  }
-
   def debugLoggingParameters(form: MapValidator, id: Option[Long] = None) = {
     val forId = id.map { id => s" for [id -> ${id}]" }.getOrElse("")
     val params = form.paramMap.map { case (name, value) => s"${name} -> '${value}'" }.mkString("[", ", ", "]")
@@ -129,42 +113,4 @@ class EmployeesSchedulesController extends ApplicationController {
     logger.debug(s"Permitted parameters${forId}: ${params}")
   }
 
-  def employeeAction()(implicit format: Format = Format.HTML): Any = withFormat(format) {
-    if (enablePagination) {
-      val pageNo: Int = params.getAs[Int]("page").getOrElse(1)
-      val pageSize: Int = 20
-      val totalCount: Long = Employee.countAllModels()
-      val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
-      set("employees", Employee.findModels(pageSize, pageNo))
-      set("totalPages" -> totalPages)
-    } else {
-      set("employees", Employee.findAll())
-    }
-    render(s"${viewsDirectoryPath}/employees/index")
-  }
-
-  def employeeShowAction = {
-    val employeeId = params.getAsOrElse[Long]("employeeId", -1)
-    showEmployeeResource(employeeId)
-  }
-
-  def showEmployeeResource(employeeId: Long)(implicit format: Format = Format.HTML): Any = withFormat(format) {
-    set("employee", Employee.joins(Employee.schedulesRef).findById(employeeId).getOrElse(haltWithBody(404)))
-    render(s"${viewsDirectoryPath}/employees/show")
-  }
-
-  def employeeNewAction = {
-    val employeeId = params.getAsOrElse[Long]("employeeId", -1)
-    set("employee", Employee.findById(employeeId).getOrElse(haltWithBody(404)))
-    render(s"${viewsDirectoryPath}/employees/new")
-  }
-
-  //  def showScheduleResource(scheduleId: Long)(implicit format: Format = Format.HTML): Any = withFormat(format) {
-  //    render(s"/${resourcesName}/schedules/index")
-  //  }
-  //
-  //  def scheduleAction = {
-  //    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
-  //    showScheduleResource(scheduleId)
-  //  }
 }

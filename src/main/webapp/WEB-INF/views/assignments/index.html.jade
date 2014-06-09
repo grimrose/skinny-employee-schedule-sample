@@ -1,0 +1,6 @@
+-@val s: skinny.Skinny
+
+h3 #{s.i18n.get("employee.list")}
+
+a(href={s.url(Controllers.assignments.employeesUrl)} class="btn btn-default") #{s.i18n.get("employee.list")}
+a(href={s.url(Controllers.assignments.schedulesUrl)} class="btn btn-default") #{s.i18n.get("schedule.list")}
