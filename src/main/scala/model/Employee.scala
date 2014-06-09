@@ -6,18 +6,17 @@ import org.joda.time._
 
 // If your model has +23 fields, switch this to normal class and mixin scalikejdbc.EntityEquality.
 case class Employee(
-                     id: Long,
-                     firstName: String,
-                     middleName: String,
-                     lastName: String,
-                     gender: Int,
-                     startedEmployment: Option[LocalDate] = None,
-                     leftEmployment: Option[LocalDate] = None,
-                     otherDetail: Option[String] = None,
-                     schedules: Seq[Schedule] = Nil,
-                     createdAt: DateTime,
-                     updatedAt: DateTime
-                     ) {
+    id: Long,
+    firstName: String,
+    middleName: String,
+    lastName: String,
+    gender: Int,
+    startedEmployment: Option[LocalDate] = None,
+    leftEmployment: Option[LocalDate] = None,
+    otherDetail: Option[String] = None,
+    schedules: Seq[Schedule] = Nil,
+    createdAt: DateTime,
+    updatedAt: DateTime) {
 
   def fullName = Seq(firstName, middleName, lastName).mkString(" ")
 }

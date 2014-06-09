@@ -1,6 +1,6 @@
 package model
 
-import skinny.{ParamType, DBSettings}
+import skinny.{ ParamType, DBSettings }
 import skinny.test._
 import org.scalatest.fixture.FlatSpec
 import scalikejdbc._, SQLInterpolation._

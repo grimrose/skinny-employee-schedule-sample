@@ -6,16 +6,15 @@ import org.joda.time._
 
 // If your model has +23 fields, switch this to normal class and mixin scalikejdbc.EntityEquality.
 case class Schedule(
-                     id: Long,
-                     plannedScheduleId: Long,
-                     start: DateTime,
-                     end: Option[DateTime] = None,
-                     otherDetails: Option[String] = None,
-                     plannedSchedule: Option[PlannedSchedule] = None,
-                     employees: Seq[Employee] = Nil,
-                     createdAt: DateTime,
-                     updatedAt: DateTime
-                     )
+  id: Long,
+  plannedScheduleId: Long,
+  start: DateTime,
+  end: Option[DateTime] = None,
+  otherDetails: Option[String] = None,
+  plannedSchedule: Option[PlannedSchedule] = None,
+  employees: Seq[Employee] = Nil,
+  createdAt: DateTime,
+  updatedAt: DateTime)
 
 object Schedule extends SkinnyCRUDMapper[Schedule] with TimestampsFeature[Schedule] {
   override lazy val tableName = "schedules"

@@ -32,7 +32,6 @@ class EmployeesSchedulesControllerSpec extends FunSpec with ShouldMatchers with 
     EmployeeSchedule.findByEmployeeIdAndScheduleId(employeeId, scheduleId).get
   }
 
-
   describe("EmployeesSchedulesController") {
 
     describe("shows employees schedules") {

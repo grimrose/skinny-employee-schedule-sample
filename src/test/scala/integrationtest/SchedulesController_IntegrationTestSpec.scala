@@ -59,9 +59,9 @@ class SchedulesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
       "start" -> skinny.util.DateTimeUtil.toString(new DateTime()),
       "end" -> skinny.util.DateTimeUtil.toString(new DateTime()),
       "other_details" -> "dummy") {
-      logBodyUnless(403)
-      status should equal(403)
-    }
+        logBodyUnless(403)
+        status should equal(403)
+      }
 
     withSession("csrf-token" -> "valid_token") {
       post(s"/schedules",
@@ -70,11 +70,11 @@ class SchedulesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
         "end" -> skinny.util.DateTimeUtil.toString(new DateTime()),
         "other_details" -> "dummy",
         "csrf-token" -> "valid_token") {
-        logBodyUnless(302)
-        status should equal(302)
-        val id = header("Location").split("/").last.toLong
-        Schedule.findById(id).isDefined should equal(true)
-      }
+          logBodyUnless(302)
+          status should equal(302)
+          val id = header("Location").split("/").last.toLong
+          Schedule.findById(id).isDefined should equal(true)
+        }
     }
   }
 
@@ -91,9 +91,9 @@ class SchedulesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
       "start" -> skinny.util.DateTimeUtil.toString(new DateTime()),
       "end" -> skinny.util.DateTimeUtil.toString(new DateTime()),
       "other_details" -> "dummy") {
-      logBodyUnless(403)
-      status should equal(403)
-    }
+        logBodyUnless(403)
+        status should equal(403)
+      }
 
     withSession("csrf-token" -> "valid_token") {
       put(s"/schedules/${newSchedule.id}",
@@ -102,9 +102,9 @@ class SchedulesController_IntegrationTestSpec extends ScalatraFlatSpec with Skin
         "end" -> skinny.util.DateTimeUtil.toString(new DateTime()),
         "other_details" -> "dummy",
         "csrf-token" -> "valid_token") {
-        logBodyUnless(302)
-        status should equal(302)
-      }
+          logBodyUnless(302)
+          status should equal(302)
+        }
     }
   }
 

@@ -1,16 +1,15 @@
 package model
 
 import skinny.orm.SkinnyJoinTable
-import scalikejdbc.{WrappedResultSet, SQLInterpolation, DBSession}
+import scalikejdbc.{ WrappedResultSet, SQLInterpolation, DBSession }
 import SQLInterpolation._
-import skinny.{ParamType, PermittedStrongParameters}
+import skinny.{ ParamType, PermittedStrongParameters }
 
 case class EmployeeSchedule(
-                             employeeId: Long,
-                             scheduleId: Long,
-                             employee: Option[Employee] = None,
-                             schedule: Option[Schedule] = None
-                             )
+  employeeId: Long,
+  scheduleId: Long,
+  employee: Option[Employee] = None,
+  schedule: Option[Schedule] = None)
 
 object EmployeeSchedule extends SkinnyJoinTable[EmployeeSchedule] {
 

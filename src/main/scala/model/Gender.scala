@@ -10,4 +10,4 @@ object Gender {
 
 }
 
-sealed abstract class Gender(val code:Int)
+sealed abstract class Gender(val code: Int)
