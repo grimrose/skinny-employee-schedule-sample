@@ -1,0 +1,7 @@
+language: scala
+scala:
+  - 2.10.4
+before_script:
+  - sbt run db:migrate test
+script: sbt test
+
