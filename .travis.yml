@@ -2,5 +2,8 @@ language: scala
 scala:
   - 2.10.4
 before_script:
+  - rm -rf task/src/main/resources
+  - mkdir -p task/src/main/resources
+  - cp -pr src/main/resources/* task/src/main/resources/.
   - sbt "task/run db:migrate test"
 script: sbt test
