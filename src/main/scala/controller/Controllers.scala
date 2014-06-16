@@ -43,7 +43,7 @@ object Controllers {
     val indexUrl = get(s"${resourcesBasePath}/?")(index).as('index)
 
     val employeesUrl = get(s"${resourcesBasePath}/employees/?")(employeeAction).as('employees)
-    val employeesShowUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules")(employeeShowAction).as('employeesShow)
+    val employeesShowUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/?")(employeeShowAction).as('employeesShow)
     val employeesNewUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/new")(employeeNewAction).as('employeesNew)
 
     val destroyUrl = delete(s"${resourcesBasePath}/employees/:employeeId/schedules/:scheduleId")(destroyAction).as('destroy)

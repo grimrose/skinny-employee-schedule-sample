@@ -25,20 +25,54 @@ class AssignmentsController_IntegrationTestSpec extends ScalatraFlatSpec with Sk
     EmployeeSchedule.findByEmployeeIdAndScheduleId(employee.id, schedule.id).get
   }
 
-  ignore should "show index page" in {
-
+  it should "show index page" in {
+    get(s"/assignments") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/?") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
   }
 
-  ignore should "show employees" in {
-
+  it should "show employees" in {
+    get(s"/assignments/employees") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/employees/") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/employees/?") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
   }
 
-  ignore should "show a employee schedules" in {
-
+  it should "show a employee schedules" in {
+    val employee = newEmployee
+    get(s"/assignments/employees/${employee.id}/schedules") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/employees/${employee.id}/schedules/") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/employees/${employee.id}/schedules/?") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
   }
 
   it should "show new entry form" in {
-    val employee: Employee = newEmployee
+    val employee = newEmployee
     get(s"/assignments/employees/${employee.id}/schedules/new") {
       logBodyUnless(200)
       status should equal(200)
