@@ -1,5 +1,7 @@
 ## employee schedule application on Skinny Framework
 
+[![Build Status](https://travis-ci.org/grimrose/skinny-employee-schedule-sample.svg?branch=master)](https://travis-ci.org/grimrose/skinny-employee-schedule-sample)
+
 Run Skinny app now!
 
     ./skinny db:migrate

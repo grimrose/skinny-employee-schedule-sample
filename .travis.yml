@@ -1,0 +1,7 @@
+language: scala
+scala:
+  - 2.10.4
+
+before_script:
+  - ./skinny db:migrate test
+script: ./skinny test
