@@ -75,4 +75,38 @@ class AssignmentsController extends ApplicationController {
     } getOrElse haltWithBody(404)
   }
 
+  def scheduleAction()(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    if (enablePagination) {
+      val pageNo: Int = params.getAs[Int]("page").getOrElse(1)
+      val pageSize: Int = 20
+      val totalCount: Long = Employee.countAllModels()
+      val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
+      set("schedules", Schedule.findModels(pageSize, pageNo))
+      set("totalPages" -> totalPages)
+    } else {
+      set("schedules", Schedule.findAll())
+    }
+    render(s"${viewsDirectoryPath}/schedules/index")
+  }
+
+  def scheduleShowAction = {
+    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
+    showScheduleResource(scheduleId)
+  }
+
+  def showScheduleResource(scheduleId: Long)(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    set("schedule", Schedule.joins(Schedule.employeesRef).findById(scheduleId).getOrElse(haltWithBody(404)))
+    render(s"${viewsDirectoryPath}/schedules/show")
+  }
+
+  def scheduleNewAction = {
+    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
+    newScheduleResource(scheduleId)
+  }
+
+  def newScheduleResource(scheduleId: Long) = {
+    set("schedule", Schedule.findById(scheduleId).getOrElse(haltWithBody(404)))
+    render(s"${viewsDirectoryPath}/schedules/new")
+  }
+
 }

@@ -78,6 +78,36 @@ class AssignmentsControllerSpec extends FunSpec with ShouldMatchers with DBSetti
         controller.status should equal(200)
       }
     }
+
+    describe("schedules pages") {
+      describe("shows schedules") {
+        it("shows HTML response") {
+          val controller = createMockController
+          controller.scheduleAction
+          controller.contentType should equal("text/html; charset=utf-8")
+          controller.renderCall.map(_.path) should equal(Some("/assignments/schedules/index"))
+        }
+      }
+      describe("shows a schedule employees") {
+        it("shows HTML response") {
+          val schedule = newSchedule
+          val controller = createMockController
+          controller.showScheduleResource(schedule.id)
+          controller.status should equal(200)
+          controller.requestScope[Schedule]("schedule") should equal(Some(schedule))
+          controller.renderCall.map(_.path) should equal(Some("/assignments/schedules/show"))
+        }
+      }
+      describe("shows new resource input form") {
+        it("shows HTML response") {
+          val schedule = newSchedule
+          val controller = createMockController
+          controller.newScheduleResource(schedule.id)
+          controller.status should equal(200)
+          controller.renderCall.map(_.path) should equal(Some("/assignments/schedules/new"))
+        }
+      }
+    }
   }
 
 }
