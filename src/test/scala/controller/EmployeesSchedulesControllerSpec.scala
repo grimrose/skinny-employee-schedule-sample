@@ -63,15 +63,6 @@ class EmployeesSchedulesControllerSpec extends FunSpec with ShouldMatchers with 
       }
     }
 
-    describe("shows new resource input form") {
-      it("shows HTML response") {
-        val controller = createMockController
-        controller.newResource
-        controller.status should equal(200)
-        controller.renderCall.map(_.path) should equal(Some("/employeesSchedules/new"))
-      }
-    }
-
     describe("creates a employee schedule") {
       it("succeeds with valid parameters") {
         val employee = newEmployee
@@ -91,13 +82,6 @@ class EmployeesSchedulesControllerSpec extends FunSpec with ShouldMatchers with 
         controller.status should equal(400)
         controller.errorMessages.size should be > (0)
       }
-    }
-
-    it("destroys a employee schedule") {
-      val employeeSchedule = newEmployeeSchedule
-      val controller = createMockController
-      controller.destroyResource(employeeSchedule.employeeId, employeeSchedule.scheduleId)
-      controller.status should equal(200)
     }
 
   }

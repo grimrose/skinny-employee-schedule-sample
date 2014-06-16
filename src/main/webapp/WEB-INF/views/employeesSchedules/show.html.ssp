@@ -26,7 +26,7 @@
 
 <hr/>
 <div class="form-actions">
-    <a class="btn btn-default" href="${s.url(Controllers.employeesSchedules.indexUrl)}">${s.i18n.get("backToList")}</a>
+    <a class="btn btn-default" href="${s.url(Controllers.assignments.employeesShowUrl, "employeeId" -> item.employeeId)}">${s.i18n.get("backToList")}</a>
     <a data-method="delete" data-confirm="${s.i18n.get("employeeSchedule.delete.confirm")}"
-        href="${s.url(Controllers.employeesSchedules.destroyUrl, "employeeId" -> item.employeeId, "scheduleId" -> item.scheduleId)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
+        href="${s.url(Controllers.assignments.destroyUrl, "employeeId" -> item.employeeId, "scheduleId" -> item.scheduleId)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
 </div>

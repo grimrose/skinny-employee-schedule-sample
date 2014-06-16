@@ -1,5 +1,5 @@
 <%@val s: skinny.Skinny %>
-
+<%@val employee: model.Employee %>
 <%-- Be aware of package imports.
  1. src/main/scala/templates/ScalatePackage.scala
  2. scalateTemplateConfig in project/Build.scala

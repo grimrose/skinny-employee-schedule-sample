@@ -34,7 +34,6 @@
     <tr>
         <th>${s.i18n.get("employeeSchedule.employeeId")}</th>
         <th>${s.i18n.get("employeeSchedule.scheduleId")}</th>
-        <th></th>
     </tr>
 </thead>
 <tbody>
@@ -42,14 +41,7 @@
         <tr>
             <td>${item.employeeId}:&nbsp;${item.employee.fold("")(_.fullName)}</td>
             <td>${item.scheduleId}:&nbsp;${item.schedule.fold("")(_.plannedSchedule.fold("")(_.name))}</td>
-            <td>
-                <a href="${s.url(Controllers.employeesSchedules.showUrl, "employeeId" -> item.employeeId, "scheduleId" -> item.scheduleId)}" class="btn btn-default">${s.i18n.get("detail")}</a>
-                <a data-method="delete" data-confirm="${s.i18n.get("employeeSchedule.delete.confirm")}"
-                href="${s.url(Controllers.employeesSchedules.destroyUrl, "employeeId" -> item.employeeId, "scheduleId" -> item.scheduleId)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
-            </td>
         </tr>
     #end
 </tbody>
 </table>
-
-<a href="${s.url(Controllers.employeesSchedules.newUrl)}" class="btn btn-primary">${s.i18n.get("new")}</a>

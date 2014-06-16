@@ -6,6 +6,7 @@ import skinny.controller.AssetsController
 object Controllers {
 
   def mount(ctx: ServletContext): Unit = {
+    assignments.mount(ctx)
     employeesSchedules.mount(ctx)
     schedules.mount(ctx)
     plannedSchedules.mount(ctx)
@@ -35,19 +36,21 @@ object Controllers {
     val showUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/:scheduleId")(showAction).as('show)
     val showApiUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/:scheduleId.:ext")(showApiAction).as('showApi)
 
-    val newUrl = get(s"${resourcesBasePath}/new")(newResource).as('new)
-
     val createUrl = post(s"${resourcesBasePath}")(createResource).as('create)
+  }
+
+  object assignments extends _root_.controller.AssignmentsController with Routes {
+    val indexUrl = get(s"${resourcesBasePath}/?")(index).as('index)
+
+    val employeesUrl = get(s"${resourcesBasePath}/employees/?")(employeeAction).as('employees)
+    val employeesShowUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/?")(employeeShowAction).as('employeesShow)
+    val employeesNewUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/new")(employeeNewAction).as('employeesNew)
 
     val destroyUrl = delete(s"${resourcesBasePath}/employees/:employeeId/schedules/:scheduleId")(destroyAction).as('destroy)
 
-    val employeesUrl = get(s"${resourcesBasePath}/employees")(employeeAction).as('employees)
-    val employeesWithSlashUrl = get(s"${resourcesBasePath}/employees/")(employeeAction).as('employees)
-    val employeesShowUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules")(employeeShowAction).as('employeesShow)
-    val employeesNewUrl = get(s"${resourcesBasePath}/employees/:employeeId/schedules/new")(employeeNewAction).as('employeesNew)
-    val employeesCreateUrl = post(s"${resourcesBasePath}/employees/:employeeId/schedules")(createResource).as('employeesCreate)
-
-    //    val schedulesUrl = get("/employees_schedules/schedules/")(scheduleAction).as('schedules)
+    val schedulesUrl = get(s"${resourcesBasePath}/schedules/?") {
+      haltWithBody(404)
+    }.as('schedules)
   }
 
 }

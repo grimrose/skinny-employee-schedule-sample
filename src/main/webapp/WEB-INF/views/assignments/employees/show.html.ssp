@@ -45,16 +45,16 @@
             <td>
                 <a href="${s.url(Controllers.employeesSchedules.showUrl, "employeeId" -> employee.id, "scheduleId" -> schedule.id)}" class="btn btn-default">${s.i18n.get("detail")}</a>
                 <a data-method="delete" data-confirm="${s.i18n.get("employeeSchedule.delete.confirm")}"
-                    href="${s.url(Controllers.employeesSchedules.destroyUrl, "employeeId" -> employee.id, "scheduleId" -> schedule.id)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
+                    href="${s.url(Controllers.assignments.destroyUrl, "employeeId" -> employee.id, "scheduleId" -> schedule.id)}" rel="nofollow" class="btn btn-danger">${s.i18n.get("delete")}</a>
             </td>
         </tr>
     #end
 </tbody>
 </table>
 
-<a href="${s.url(Controllers.employeesSchedules.employeesNewUrl, "employeeId" -> employee.id)}" class="btn btn-primary">${s.i18n.get("new")}</a>
+<a href="${s.url(Controllers.assignments.employeesNewUrl, "employeeId" -> employee.id)}" class="btn btn-primary">${s.i18n.get("new")}</a>
 
 <hr/>
 <div class="form-actions">
-  <a class="btn btn-default" href="${s.url(Controllers.employeesSchedules.employeesUrl)}">${s.i18n.get("backToList")}</a>
+  <a class="btn btn-default" href="${s.url(Controllers.assignments.employeesUrl)}">${s.i18n.get("backToList")}</a>
 </div>
