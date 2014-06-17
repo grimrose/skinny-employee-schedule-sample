@@ -1,0 +1,60 @@
+<%@val s: skinny.Skinny %>
+<%@val keyAndErrorMessages: skinny.KeyAndErrorMessages %>
+
+<%@val schedule: model.Schedule %>
+<%@val employees: List[model.Employee] %>
+
+<%-- Be aware of package imports.
+ 1. src/main/scala/templates/ScalatePackage.scala
+ 2. scalateTemplateConfig in project/Build.scala
+--%>
+
+<div class="form-group">
+<label class="control-label" for="schedule_id">
+${s.i18n.get("employeeSchedule.scheduleId")}
+</label>
+<div class="controls row">
+<div class="${if(keyAndErrorMessages.hasErrors("schedule_id")) "has-error" else ""}">
+    <div class="col-xs-12">
+        ${schedule.plannedSchedule.fold("")(_.name)}
+        <input type="hidden" name="schedule_id" class="form-control" value="${schedule.id}" />
+        </div>
+    </div>
+    #if (keyAndErrorMessages.hasErrors("schedule_id"))
+        <div class="col-xs-12 has-error">
+        #for (error <- keyAndErrorMessages.getErrors("schedule_id"))
+            <label class="control-label">${error}</label>
+        #end
+        </div>
+    #end
+</div>
+</div>
+<div class="form-group">
+<label class="control-label" for="employee_id">
+    ${s.i18n.get("employeeSchedule.employeeId")}
+</label>
+<div class="controls row">
+    <div class="${if(keyAndErrorMessages.hasErrors("employeeId")) "has-error" else ""}">
+        <div class="col-xs-12">
+            #for (employee <- employees)
+                <div class="checkbox">
+                    <input type="checkbox" name="employee_id" value="${employee.id}" ${if(employee.schedules.exists(_.id == schedule.id)) "disabled" else ""} />
+                    ${employee.fullName}
+                </div>
+            #end
+        </div>
+    </div>
+    #if (keyAndErrorMessages.hasErrors("employee_id"))
+        <div class="col-xs-12 has-error">
+        #for (error <- keyAndErrorMessages.getErrors("employee_id"))
+            <label class="control-label">${error}</label>
+        #end
+        </div>
+    #end
+</div>
+</div>
+<div class="form-actions">
+    ${unescape(s.csrfHiddenInputTag)}
+    <input type="submit" class="btn btn-primary" value="${s.i18n.get("submit")}">
+    <a class="btn btn-default" href="${s.url(Controllers.assignments.schedulesShowUrl, "scheduleId" -> schedule.id)}">${s.i18n.get("cancel")}</a>
+</div>

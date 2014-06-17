@@ -1,0 +1,51 @@
+<%@val s: skinny.Skinny %>
+<%@val schedules: Seq[model.Schedule] %>
+<%@val totalPages: Int %>
+
+<%-- Be aware of package imports.
+ 1. src/main/scala/templates/ScalatePackage.scala
+ 2. scalateTemplateConfig in project/Build.scala
+--%>
+
+<h3>${s.i18n.get("schedule.list")}</h3>
+<hr/>
+#for (notice <- s.flash.notice)
+  <p class="alert alert-info">${notice}</p>
+#end
+
+#if (totalPages > 1)
+  <ul class="pagination">
+    <li>
+      <a href="${s.url(Controllers.assignments.indexUrl, "page" -> 1)}">&laquo;</a>
+    </li>
+    #for (i <- (1 to totalPages))
+      <li>
+        <a href="${s.url(Controllers.assignments.indexUrl, "page" -> i)}">${i}</a>
+      </li>
+    #end
+    <li>
+      <a href="${s.url(Controllers.assignments.indexUrl, "page" -> totalPages)}">&raquo;</a>
+    </li>
+  </ul>
+#end
+
+<table class="table table-bordered">
+<thead>
+  <tr>
+    <th>${s.i18n.get("schedule.id")}</th>
+    <th>${s.i18n.get("employeeSchedule.scheduleId")}</th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+  #for (schedule <- schedules)
+  <tr>
+    <td>${schedule.id}</td>
+    <td>${schedule.plannedSchedule.fold("")(_.name)}</td>
+    <td>
+      <a href="${s.url(Controllers.assignments.schedulesShowUrl, "scheduleId" -> schedule.id)}" class="btn btn-default">${s.i18n.get("detail")}</a>
+    </td>
+  </tr>
+  #end
+</tbody>
+</table>

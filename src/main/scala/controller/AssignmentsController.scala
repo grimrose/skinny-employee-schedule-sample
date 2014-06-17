@@ -11,8 +11,8 @@ class AssignmentsController extends ApplicationController {
   beforeAction() {
     set(RequestScopeFeature.ATTR_RESOURCES_NAME -> "items")
     set(RequestScopeFeature.ATTR_RESOURCE_NAME -> "item")
-    set("schedules", Schedule.findAll())
-    set("employees", Employee.findAll())
+    set("schedules", Schedule.joins(Schedule.employeesRef) findAll ())
+    set("employees", Employee.joins(Employee.schedulesRef).findAll())
   }
 
   def resourcesName = "assignments"
@@ -33,10 +33,10 @@ class AssignmentsController extends ApplicationController {
       val pageSize: Int = 20
       val totalCount: Long = Employee.countAllModels()
       val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
-      set("employees", Employee.findModels(pageSize, pageNo))
+      set("employees", Employee.joins(Employee.schedulesRef).findModels(pageSize, pageNo))
       set("totalPages" -> totalPages)
     } else {
-      set("employees", Employee.findAll())
+      set("employees", Employee.joins(Employee.schedulesRef).findAll())
     }
     render(s"${viewsDirectoryPath}/employees/index")
   }
@@ -57,7 +57,7 @@ class AssignmentsController extends ApplicationController {
   }
 
   def newEmployeeResource(employeeId: Long) = {
-    set("employee", Employee.findById(employeeId).getOrElse(haltWithBody(404)))
+    set("employee", Employee.joins(Employee.schedulesRef).findById(employeeId).getOrElse(haltWithBody(404)))
     render(s"${viewsDirectoryPath}/employees/new")
   }
 
@@ -81,10 +81,10 @@ class AssignmentsController extends ApplicationController {
       val pageSize: Int = 20
       val totalCount: Long = Employee.countAllModels()
       val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
-      set("schedules", Schedule.findModels(pageSize, pageNo))
+      set("schedules", Schedule.joins(Schedule.employeesRef).findModels(pageSize, pageNo))
       set("totalPages" -> totalPages)
     } else {
-      set("schedules", Schedule.findAll())
+      set("schedules", Schedule.joins(Schedule.employeesRef).findAll())
     }
     render(s"${viewsDirectoryPath}/schedules/index")
   }
@@ -105,8 +105,15 @@ class AssignmentsController extends ApplicationController {
   }
 
   def newScheduleResource(scheduleId: Long) = {
-    set("schedule", Schedule.findById(scheduleId).getOrElse(haltWithBody(404)))
+    set("schedule", Schedule.joins(Schedule.employeesRef).findById(scheduleId).getOrElse(haltWithBody(404)))
     render(s"${viewsDirectoryPath}/schedules/new")
+  }
+
+  def createEmployeesResources(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    val scheduleId = params.getAs[Long]("scheduleId")
+    // TODO multiParams
+    status = 400
+    render(s"${viewsDirectoryPath}/schedules/${scheduleId}/employees/new")
   }
 
 }
