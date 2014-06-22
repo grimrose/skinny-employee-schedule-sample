@@ -34,7 +34,7 @@ ${s.i18n.get("employeeSchedule.scheduleId")}
     ${s.i18n.get("employeeSchedule.employeeId")}
 </label>
 <div class="controls row">
-    <div class="${if(keyAndErrorMessages.hasErrors("employeeId")) "has-error" else ""}">
+    <div class="${if(keyAndErrorMessages.hasErrors("employee_id")) "has-error" else ""}">
         <div class="col-xs-12">
             #for (employee <- employees)
                 <div class="checkbox">
