@@ -1,7 +1,7 @@
 package model
 
-import skinny.orm.SkinnyJoinTable
-import scalikejdbc.{ WrappedResultSet, SQLInterpolation, DBSession }
+import skinny.orm.{ Alias, SkinnyJoinTable }
+import scalikejdbc._
 import SQLInterpolation._
 import skinny.{ ParamType, PermittedStrongParameters }
 
@@ -47,4 +47,11 @@ object EmployeeSchedule extends SkinnyJoinTable[EmployeeSchedule] {
     val es = defaultAlias
     findBy(sqls.eq(es.employeeId, employeeId).and.eq(es.scheduleId, scheduleId))
   }
+
+  def createScheduleIdAndEmployeeIds(scheduleId: Long, employeeIds: Seq[Long])(implicit session: DBSession = autoSession): Seq[Int] = {
+    val es = column
+    val batchParams = employeeIds.map(employeeId => Seq(employeeId, scheduleId))
+    insert.into(EmployeeSchedule).namedValues(es.employeeId -> sqls.?, es.scheduleId -> sqls.?).toSQL.batch(batchParams: _*).apply()
+  }
+
 }
