@@ -68,6 +68,14 @@ class EmployeeScheduleSpec extends fixture.FunSpec with ShouldMatchers with DBSe
       parameters.getOrElse("schedule_id", -1L) should be(schedule_id)
       EmployeeSchedule.findByEmployeeIdAndScheduleId(employee_id, schedule_id).isDefined should equal(true)
     }
+    it("should insert with schedule and employees parameter") { implicit session =>
+      val plannedSchedule = FactoryGirl.apply(PlannedSchedule).create()
+      val scheduleId = FactoryGirl.apply(Schedule).withAttributes('plannedScheduleId -> plannedSchedule.id).create().id
+      val employeeId1 = FactoryGirl.apply(Employee).create().id
+      val employeeId2 = FactoryGirl.apply(Employee).create().id
+
+      EmployeeSchedule.createScheduleIdAndEmployeeIds(scheduleId, Seq(employeeId1, employeeId2)) should equal(Seq(1, 1))
+    }
   }
 
 }

@@ -55,6 +55,21 @@ class AssignmentsController_IntegrationTestSpec extends ScalatraFlatSpec with Sk
     }
   }
 
+  it should "show schedules" in {
+    get(s"/assignments/schedules") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/schedules/") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+    get(s"/assignments/schedules/?") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+  }
+
   it should "show a employee schedules" in {
     val employee = newEmployee
     get(s"/assignments/employees/${employee.id}/schedules") {
@@ -71,11 +86,47 @@ class AssignmentsController_IntegrationTestSpec extends ScalatraFlatSpec with Sk
     }
   }
 
-  it should "show new entry form" in {
+  it should "show employee new entry form" in {
     val employee = newEmployee
     get(s"/assignments/employees/${employee.id}/schedules/new") {
       logBodyUnless(200)
       status should equal(200)
+    }
+  }
+
+  it should "show schedule new entry form" in {
+    val schedule = newSchedule
+    get(s"/assignments/schedules/${schedule.id}/new") {
+      logBodyUnless(200)
+      status should equal(200)
+    }
+  }
+
+  it should "assign schedule to employees" in {
+    val employee1 = newEmployee
+    val employee2 = newEmployee
+    val schedule = newSchedule
+    post(s"/assignments/schedules/${schedule.id}",
+      "employee_id" -> employee1.id.toString,
+      "employee_id" -> employee2.id.toString) {
+        logBodyUnless(403)
+        status should equal(403)
+      }
+
+    withSession("csrf-token" -> "valid_token") {
+      val employee1 = newEmployee
+      val employee2 = newEmployee
+      val schedule = newSchedule
+      post(s"/assignments/schedules/${schedule.id}",
+        "schedule_id" -> schedule.id.toString,
+        "employee_id" -> employee1.id.toString,
+        "employee_id" -> employee2.id.toString,
+        "csrf-token" -> "valid_token") {
+          logBodyUnless(302)
+          status should equal(302)
+          EmployeeSchedule.findByEmployeeIdAndScheduleId(employee1.id, schedule.id).isDefined should equal(true)
+          EmployeeSchedule.findByEmployeeIdAndScheduleId(employee2.id, schedule.id).isDefined should equal(true)
+        }
     }
   }
 

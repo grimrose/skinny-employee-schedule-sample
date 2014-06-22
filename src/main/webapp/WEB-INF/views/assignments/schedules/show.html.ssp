@@ -1,0 +1,49 @@
+<%@val schedule: model.Schedule %>
+<%@val s: skinny.Skinny %>
+
+<%-- Be aware of package imports.
+ 1. src/main/scala/templates/ScalatePackage.scala
+ 2. scalateTemplateConfig in project/Build.scala
+--%>
+
+<h3>${s.i18n.get("employeeSchedule.detail")}</h3>
+<hr/>
+#for (notice <- s.flash.notice)
+  <p class="alert alert-info">${notice}</p>
+#end
+<table class="table table-bordered">
+<thead>
+  <tr>
+    <th>${s.i18n.get("employeeSchedule.id")}</th>
+    <td>${schedule.id}</td>
+  </tr>
+  <tr>
+    <th>${s.i18n.get("employeeSchedule.scheduleId")}</th>
+    <td>${schedule.plannedSchedule.fold("")(_.name)}</td>
+  </tr>
+
+</thead>
+</table>
+<hr/>
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th>${s.i18n.get("employee.id")}</th>
+        <th>${s.i18n.get("employee.name")}</th>
+    </tr>
+</thead>
+<tbody>
+    #for (employee <- schedule.employees)
+        <tr>
+            <td>${employee.id}</td>
+            <td>${employee.fullName}</td>
+        </tr>
+    #end
+</tbody>
+</table>
+<a href="${s.url(Controllers.assignments.schedulesNewUrl, "scheduleId" -> schedule.id)}" class="btn btn-primary">${s.i18n.get("new")}</a>
+
+<hr/>
+<div class="form-actions">
+  <a class="btn btn-default" href="${s.url(Controllers.assignments.schedulesUrl)}">${s.i18n.get("backToList")}</a>
+</div>

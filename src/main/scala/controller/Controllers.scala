@@ -48,9 +48,11 @@ object Controllers {
 
     val destroyUrl = delete(s"${resourcesBasePath}/employees/:employeeId/schedules/:scheduleId")(destroyAction).as('destroy)
 
-    val schedulesUrl = get(s"${resourcesBasePath}/schedules/?") {
-      haltWithBody(404)
-    }.as('schedules)
+    val schedulesUrl = get(s"${resourcesBasePath}/schedules/?")(scheduleAction).as('schedules)
+    val schedulesShowUrl = get(s"${resourcesBasePath}/schedules/:scheduleId/?")(scheduleShowAction).as('schedulesShow)
+    val schedulesNewUrl = get(s"${resourcesBasePath}/schedules/:scheduleId/new")(scheduleNewAction).as('schedulesNew)
+
+    val assignToEmployeesUrl = post(s"${resourcesBasePath}/schedules/:scheduleId")(createEmployeesResources).as('assignToEmployees)
   }
 
 }

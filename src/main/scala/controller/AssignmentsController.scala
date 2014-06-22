@@ -1,9 +1,9 @@
 package controller
 
+import model.{ Employee, EmployeeSchedule, Schedule }
 import skinny._
-import skinny.validator._
-import model.{ EmployeeSchedule, Schedule, Employee }
 import skinny.controller.feature.RequestScopeFeature
+import skinny.validator._
 
 class AssignmentsController extends ApplicationController {
   protectFromForgery()
@@ -11,8 +11,8 @@ class AssignmentsController extends ApplicationController {
   beforeAction() {
     set(RequestScopeFeature.ATTR_RESOURCES_NAME -> "items")
     set(RequestScopeFeature.ATTR_RESOURCE_NAME -> "item")
-    set("schedules", Schedule.findAll())
-    set("employees", Employee.findAll())
+    set("schedules", Schedule.joins(Schedule.employeesRef) findAll ())
+    set("employees", Employee.joins(Employee.schedulesRef).findAll())
   }
 
   def resourcesName = "assignments"
@@ -33,10 +33,10 @@ class AssignmentsController extends ApplicationController {
       val pageSize: Int = 20
       val totalCount: Long = Employee.countAllModels()
       val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
-      set("employees", Employee.findModels(pageSize, pageNo))
+      set("employees", Employee.joins(Employee.schedulesRef).findModels(pageSize, pageNo))
       set("totalPages" -> totalPages)
     } else {
-      set("employees", Employee.findAll())
+      set("employees", Employee.joins(Employee.schedulesRef).findAll())
     }
     render(s"${viewsDirectoryPath}/employees/index")
   }
@@ -57,7 +57,7 @@ class AssignmentsController extends ApplicationController {
   }
 
   def newEmployeeResource(employeeId: Long) = {
-    set("employee", Employee.findById(employeeId).getOrElse(haltWithBody(404)))
+    set("employee", Employee.joins(Employee.schedulesRef).findById(employeeId).getOrElse(haltWithBody(404)))
     render(s"${viewsDirectoryPath}/employees/new")
   }
 
@@ -73,6 +73,65 @@ class AssignmentsController extends ApplicationController {
       flash += ("notice" -> createI18n().get(s"${resourceName}.flash.deleted").getOrElse(s"The ${resourceName} was deleted."))
       status = 200
     } getOrElse haltWithBody(404)
+  }
+
+  def scheduleAction()(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    if (enablePagination) {
+      val pageNo: Int = params.getAs[Int]("page").getOrElse(1)
+      val pageSize: Int = 20
+      val totalCount: Long = Employee.countAllModels()
+      val totalPages: Int = (totalCount / pageSize).toInt + (if (totalCount % pageSize == 0) 0 else 1)
+      set("schedules", Schedule.joins(Schedule.employeesRef).findModels(pageSize, pageNo))
+      set("totalPages" -> totalPages)
+    } else {
+      set("schedules", Schedule.joins(Schedule.employeesRef).findAll())
+    }
+    render(s"${viewsDirectoryPath}/schedules/index")
+  }
+
+  def scheduleShowAction = {
+    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
+    showScheduleResource(scheduleId)
+  }
+
+  def showScheduleResource(scheduleId: Long)(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    set("schedule", Schedule.joins(Schedule.employeesRef).findById(scheduleId).getOrElse(haltWithBody(404)))
+    render(s"${viewsDirectoryPath}/schedules/show")
+  }
+
+  def scheduleNewAction = {
+    val scheduleId = params.getAsOrElse[Long]("scheduleId", -1)
+    newScheduleResource(scheduleId)
+  }
+
+  def newScheduleResource(scheduleId: Long) = {
+    set("schedule", Schedule.joins(Schedule.employeesRef).findById(scheduleId).getOrElse(haltWithBody(404)))
+    render(s"${viewsDirectoryPath}/schedules/new")
+  }
+
+  def createEmployeesForm = validationWithParams(
+    paramKey("employee_id") is required & numeric & longValue,
+    paramKey("schedule_id") is required & numeric & longValue
+  )
+
+  def createEmployeesResources(implicit format: Format = Format.HTML): Any = withFormat(format) {
+    val scheduleId = params.getAsOrElse[Long]("schedule_id", -1)
+    if (createEmployeesForm.validate()) {
+      for {
+        schedule <- Schedule.findById(scheduleId)
+        employeeIds <- multiParams.getAs[Long]("employee_id")
+      } yield {
+        try EmployeeSchedule.createScheduleIdAndEmployeeIds(schedule.id, employeeIds)
+        catch {
+          case e: Exception => haltWithBody(409)
+        }
+      }
+      flash += ("notice" -> createI18n().get(s"${resourceName}.flash.created").getOrElse(s"The ${resourceName} was created."))
+      redirect302(s"${resourcesBasePath}/schedules/${scheduleId}/")
+    } else {
+      status = 400
+      newScheduleResource(scheduleId)
+    }
   }
 
 }
