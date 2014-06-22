@@ -2,6 +2,7 @@ package controller
 
 import _root_.controller._
 import _root_.model._
+import org.joda.time.LocalDate
 import org.scalatra.test.scalatest._
 import skinny.test._
 import org.scalatest.FunSpec
@@ -105,6 +106,30 @@ class AssignmentsControllerSpec extends FunSpec with ShouldMatchers with DBSetti
           controller.newScheduleResource(schedule.id)
           controller.status should equal(200)
           controller.renderCall.map(_.path) should equal(Some("/assignments/schedules/new"))
+        }
+      }
+
+      describe("creates resources") {
+        it("succeeds with valid parameters") {
+          val schedule = newSchedule
+          val employee = newEmployee
+          val controller = createMockController
+          controller.prepareParams(
+            "schedule_id" -> schedule.id.toString,
+            "employee_id" -> employee.id.toString)
+          controller.createEmployeesResources
+          controller.status should equal(200)
+        }
+
+        it("fails with invalid parameters") {
+          val schedule = newSchedule
+          val controller = createMockController
+          controller.prepareParams(
+            "schedule_id" -> schedule.id.toString
+          )
+          controller.createEmployeesResources
+          controller.status should equal(400)
+          controller.errorMessages.size should be > 0
         }
       }
     }

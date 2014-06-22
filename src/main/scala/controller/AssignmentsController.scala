@@ -1,9 +1,9 @@
 package controller
 
+import model.{ Employee, EmployeeSchedule, Schedule }
 import skinny._
-import skinny.validator._
-import model.{ EmployeeSchedule, Schedule, Employee }
 import skinny.controller.feature.RequestScopeFeature
+import skinny.validator._
 
 class AssignmentsController extends ApplicationController {
   protectFromForgery()
@@ -109,11 +109,29 @@ class AssignmentsController extends ApplicationController {
     render(s"${viewsDirectoryPath}/schedules/new")
   }
 
+  def createEmployeesForm = validationWithParams(
+    paramKey("employee_id") is required & numeric & longValue,
+    paramKey("schedule_id") is required & numeric & longValue
+  )
+
   def createEmployeesResources(implicit format: Format = Format.HTML): Any = withFormat(format) {
-    val scheduleId = params.getAs[Long]("scheduleId")
-    // TODO multiParams
-    status = 400
-    render(s"${viewsDirectoryPath}/schedules/${scheduleId}/employees/new")
+    val scheduleId = params.getAsOrElse[Long]("schedule_id", -1)
+    if (createEmployeesForm.validate()) {
+      for {
+        schedule <- Schedule.findById(scheduleId)
+        employeeIds <- multiParams.getAs[Long]("employee_id")
+      } yield {
+        try EmployeeSchedule.createScheduleIdAndEmployeeIds(schedule.id, employeeIds)
+        catch {
+          case e: Exception => haltWithBody(409)
+        }
+      }
+      flash += ("notice" -> createI18n().get(s"${resourceName}.flash.created").getOrElse(s"The ${resourceName} was created."))
+      redirect302(s"${resourcesBasePath}/schedules/${scheduleId}/")
+    } else {
+      status = 400
+      newScheduleResource(scheduleId)
+    }
   }
 
 }
