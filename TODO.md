@@ -1,14 +1,8 @@
 ### TODO
 
-* employee and schedule
-    
-    * ScheduleをEmployeeに関連付ける機能を追加する。
-    
-        * Scheduleを選択して、複数のEmployeeに関連付ける。
+* SQLに関するExceptionでRetryを促せるものは促すようにする。
 
-    * SQLに関するExceptionでRetryを促せるものは促すようにする。
-    
-        * Errorになった場合のControllerの処理
+    * Errorになった場合のControllerの処理
    
 * テストケースの追加。
 
