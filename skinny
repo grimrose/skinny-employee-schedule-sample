@@ -31,27 +31,28 @@ function setup_standalone_build() {
   rm -rf standalone-build
   mkdir standalone-build
   cp -pr src standalone-build/src
-  cp -pr build.sbt standalone-build/build.sbt
-  cp -pr _skinny_assembly_settings.sbt standalone-build/build.sbt
+  cp -p build.sbt standalone-build/
+  cp -p _skinny_assembly_settings.sbt standalone-build/
 }
 function copy_resources_to_task() {
   rm -rf task/src/main/resources
+  rm -rf task/target/
   mkdir -p task/src/main/resources
   cp -pr src/main/resources/* task/src/main/resources/.
 }
 function setup_scalajs() {
   setting_file="${current_dir}/project/_skinny_scalajs.sbt"
   if [ ! -f "${setting_file}" ]; then
-    echo "addSbtPlugin(\"org.scala-lang.modules.scalajs\" % \"scalajs-sbt-plugin\" % \"0.4.3\")" > ${setting_file}
+    echo "addSbtPlugin(\"org.scala-lang.modules.scalajs\" % \"scalajs-sbt-plugin\" % \"0.5.0\")" > ${setting_file}
 
     echo "lazy val scalaJS = Project(id = \"scalajs\", base = file(\"src/main/webapp/WEB-INF/assets\"),
-  settings = Defaults.defaultSettings ++ Seq(
+  settings = Seq(
     name := \"application\", // JavaScript file name
     unmanagedSourceDirectories in Compile <+= baseDirectory(_ / \"scala\"),
     libraryDependencies ++= Seq(
-      \"org.scala-lang.modules.scalajs\" %% \"scalajs-dom\"                    % \"0.3\",
-      \"org.scala-lang.modules.scalajs\" %% \"scalajs-jquery\"                 % \"0.3\",
-      \"org.scala-lang.modules.scalajs\" %% \"scalajs-jasmine-test-framework\" % \"0.4.3\" % \"test\"
+      \"org.scala-lang.modules.scalajs\" %%% \"scalajs-dom\"                    % \"0.6\",
+      \"org.scala-lang.modules.scalajs\" %%% \"scalajs-jquery\"                 % \"0.6\",
+      \"org.scala-lang.modules.scalajs\" %%  \"scalajs-jasmine-test-framework\" % \"0.5.0\" % \"test\"
     ),
     crossTarget in Compile <<= baseDirectory(_ / \"..\" / \"..\" / \"assets\" / \"js\")
   )
@@ -104,13 +105,10 @@ elif [ "$command" == "test:coverage" ];then
   ${sbt_path} "dev/scoverage:test"
 elif [ "$command" == "scalajs:watch" ];then
   setup_scalajs
-  ${sbt_path} "project scalajs" "~;packageJS"
+  ${sbt_path} "project scalajs" "~;fastOptJS"
 elif [ "$command" == "scalajs:package" ];then
   setup_scalajs
-  ${sbt_path} "project scalajs" packageJS
-elif [ "$command" == "scalajs:optimize" ];then
-  setup_scalajs
-  ${sbt_path} "project scalajs" optimizeJS
+  ${sbt_path} "project scalajs" fastOptJS
 elif [ "$command" == "g" -o "$command" == "generate" ];then
   generator_type="$2"
   shift
@@ -157,12 +155,24 @@ assemblySettings
 mainClass in assembly := Some(\"skinny.standalone.JettyLauncher\")
 
 _root_.sbt.Keys.test in assembly := {}
+
+resourceGenerators in Compile <+= (resourceManaged, baseDirectory) map { (managedBase, base) =>
+  val webappBase = base / \"src\" / \"main\" / \"webapp\"
+  for ( (from, to) <- webappBase ** \"*\" \`pair\` rebase(webappBase, managedBase / \"main/\") )
+  yield {
+    Sync.copy(from, to)
+    to
+  }
+}
 " > "${current_dir}/_skinny_assembly_settings.sbt"
   fi
 
   setup_standalone_build
   copy_resources_to_task
-  ${sbt_path} "task/run assets:precompile" standalone-build/assembly
+  ${sbt_path} "task/run assets:precompile standalone-build"
+  rm -fr standalone-build/src/main/webapp/WEB-INF/assets
+  mv standalone-build/src/main/webapp/assets standalone-build/src/main/webapp/WEB-INF/
+  ${sbt_path} standalone-build/assembly
 elif [ "$command" == "publish" ];then
   setup_build
   copy_resources_to_task
@@ -194,7 +204,6 @@ else
   echo ""
   echo "  scalajs:watch    : will watch Scala.js Scala code change and convert to JS"
   echo "  scalajs:package  : will convert Scala.js Scala code to JS file"
-  echo "  scalajs:optimize : will optimize the huge JS file to optimized small JS"
   echo ""
   echo "  eclipse       : will setup Scala IDE settings"
   echo "  idea/gen-idea : will setup IntelliJ IDEA settings"

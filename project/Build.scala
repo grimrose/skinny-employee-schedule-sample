@@ -18,14 +18,12 @@ object SkinnyAppBuild extends Build {
   val appName = "skinny-human-schedule"
   val appVersion = "0.1.0-SNAPSHOT"
 
-  val skinnyVersion = "1.0.17"
-  val scalatraVersion = "2.2.2"
-  val theScalaVersion = "2.10.3"
-  //val jettyVersion = "9.2.0.v20140526"
-  // Your project runs on Java 6, choose Jetty 8 instead.
-  val jettyVersion = "8.1.10.v20130312"
+  val skinnyVersion = "1.1.1"
+  val scalatraVersion = "2.3.0"
+  val theScalaVersion = "2.11.1"
+  val jettyVersion = "9.2.1.v20140609"
 
-  lazy val baseSettings = Defaults.defaultSettings ++ ScalatraPlugin.scalatraWithJRebel ++ herokuSettings ++ Seq(
+  lazy val baseSettings = ScalatraPlugin.scalatraWithJRebel ++ herokuSettings ++ Seq(
     organization := appOrganization,
     name         := appName,
     version      := appVersion,
@@ -34,7 +32,8 @@ object SkinnyAppBuild extends Build {
       "org.skinny-framework"    %% "skinny-framework"    % skinnyVersion,
       "org.skinny-framework"    %% "skinny-assets"       % skinnyVersion,
       "org.skinny-framework"    %% "skinny-task"         % skinnyVersion,
-      "com.h2database"          %  "h2"                  % "1.4.178",      // your own JDBC driver
+      "org.apache.commons"      %  "commons-dbcp2"       % "2.0.1",
+      "com.h2database"          %  "h2"                  % "1.4.179",      // your own JDBC driver
       "ch.qos.logback"          %  "logback-classic"     % "1.1.2",
       // To fix java.lang.ClassNotFoundException: scala.collection.Seq when running tests
       "org.scala-lang"          %  "scala-library"       % theScalaVersion      % "test",
@@ -45,7 +44,7 @@ object SkinnyAppBuild extends Build {
       //"org.scalatra"            %% "scalatra-specs2"     % scalatraVersion       % "test",
       "org.eclipse.jetty"       %  "jetty-webapp"        % jettyVersion          % "container",
       "org.eclipse.jetty"       %  "jetty-plus"          % jettyVersion          % "container",
-      "org.eclipse.jetty.orbit" %  "javax.servlet"       % "3.0.0.v201112011016" % "container;provided;test",
+      "javax.servlet"           %  "javax.servlet-api"   % "3.1.0"               % "container;provided;test",
       // To fix Scalate runtime evaluation error on Java 8 (https://gist.github.com/seratch/9680709)
       "org.scala-lang"          %  "scala-compiler"      % theScalaVersion       % "container"
     ),
@@ -62,7 +61,7 @@ object SkinnyAppBuild extends Build {
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
   )
 
-  lazy val scalatePrecomileSettings = baseSettings ++ scalateSettings ++ Seq(
+  lazy val scalatePrecompileSettings = baseSettings ++ scalateSettings ++ Seq(
     scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
       Seq( TemplateConfig(file(".") / "src" / "main" / "webapp" / "WEB-INF",
       // These imports should be same as src/main/scala/templates/ScalatePackage.scala
@@ -90,7 +89,7 @@ object SkinnyAppBuild extends Build {
     )
   )
   lazy val precompileDev = Project(id = "precompileDev", base = file("."),
-    settings = devBaseSettings ++ scalatePrecomileSettings ++ Seq(
+    settings = devBaseSettings ++ scalatePrecompileSettings ++ Seq(
       target := baseDirectory.value / "target" / "precompile-dev"
     )
   )
@@ -109,7 +108,7 @@ object SkinnyAppBuild extends Build {
   // Packaging
   // -------------------------------------------------------
 
-  lazy val packagingBaseSettings = baseSettings ++ scalateSettings ++ scalatePrecomileSettings ++ Seq(
+  lazy val packagingBaseSettings = baseSettings ++ scalatePrecompileSettings ++ Seq(
     sources in doc in Compile := List(),
     publishTo <<= version { (v: String) =>
       val base = "https://oss.sonatype.org/"
