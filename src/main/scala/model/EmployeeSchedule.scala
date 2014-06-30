@@ -1,8 +1,7 @@
 package model
 
-import skinny.orm.{ Alias, SkinnyJoinTable }
 import scalikejdbc._
-import SQLInterpolation._
+import skinny.orm.SkinnyJoinTable
 import skinny.{ ParamType, PermittedStrongParameters }
 
 case class EmployeeSchedule(
@@ -18,7 +17,7 @@ object EmployeeSchedule extends SkinnyJoinTable[EmployeeSchedule] {
 
   override def defaultOrdering = defaultAlias.field("employeeId")
 
-  override def extract(rs: WrappedResultSet, rn: ResultName[EmployeeSchedule]): EmployeeSchedule = new EmployeeSchedule(
+  override def extract(rs: WrappedResultSet, rn: scalikejdbc.ResultName[EmployeeSchedule]): EmployeeSchedule = new EmployeeSchedule(
     employeeId = rs.get(rn.employeeId),
     scheduleId = rs.get(rn.scheduleId)
   )

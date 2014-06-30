@@ -1,14 +1,13 @@
 package controller
 
-import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, FunSpec}
 import skinny._
 import skinny.test._
 import org.joda.time._
 import model._
 
 // NOTICE before/after filters won't be executed by default
-class EmployeesControllerSpec extends FunSpec with ShouldMatchers with DBSettings {
+class EmployeesControllerSpec extends FunSpec with Matchers with DBSettings {
 
   def createMockController = new EmployeesController with MockController
   def newEmployee = FactoryGirl(Employee).create()

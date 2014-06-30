@@ -1,18 +1,17 @@
 package controller
 
-import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, FunSpec}
 import skinny._
 import skinny.test._
 import org.joda.time._
 import model._
-import scalikejdbc.SQLInterpolation._
+import scalikejdbc._
 import skinny.test.FactoryGirl
 import scala.Some
 import scalikejdbc.DBSession
 
 // NOTICE before/after filters won't be executed by default
-class EmployeesSchedulesControllerSpec extends FunSpec with ShouldMatchers with DBSettings {
+class EmployeesSchedulesControllerSpec extends FunSpec with Matchers with DBSettings {
 
   def createMockController = new EmployeesSchedulesController with MockController
 

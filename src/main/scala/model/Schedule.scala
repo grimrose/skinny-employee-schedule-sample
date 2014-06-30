@@ -1,7 +1,7 @@
 package model
 
 import skinny.orm._, feature._
-import scalikejdbc._, SQLInterpolation._
+import scalikejdbc._
 import org.joda.time._
 
 // If your model has +23 fields, switch this to normal class and mixin scalikejdbc.EntityEquality.
@@ -20,7 +20,7 @@ object Schedule extends SkinnyCRUDMapper[Schedule] with TimestampsFeature[Schedu
   override lazy val tableName = "schedules"
   override lazy val defaultAlias = createAlias("s")
 
-  override def extract(rs: WrappedResultSet, rn: ResultName[Schedule]): Schedule = new Schedule(
+  override def extract(rs: WrappedResultSet, rn: scalikejdbc.ResultName[Schedule]): Schedule = new Schedule(
     id = rs.get(rn.id),
     plannedScheduleId = rs.get(rn.plannedScheduleId),
     start = rs.get(rn.start),

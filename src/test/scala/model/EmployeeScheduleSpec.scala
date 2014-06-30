@@ -1,14 +1,12 @@
 package model
 
-import org.scalatest.fixture
-import org.scalatest.matchers.ShouldMatchers
-import skinny.{ StrongParameters, ParamType, PermittedStrongParameters, DBSettings }
+import org.scalatest.{ Matchers, fixture }
+import scalikejdbc._
 import scalikejdbc.scalatest.AutoRollback
-import scalikejdbc.DBSession
-import scalikejdbc.SQLInterpolation._
 import skinny.test.FactoryGirl
+import skinny.{ DBSettings, ParamType, PermittedStrongParameters, StrongParameters }
 
-class EmployeeScheduleSpec extends fixture.FunSpec with ShouldMatchers with DBSettings with AutoRollback {
+class EmployeeScheduleSpec extends fixture.FunSpec with Matchers with DBSettings with AutoRollback {
   override def fixture(implicit session: DBSession): Unit = {
     delete.from(EmployeeSchedule).toSQL.execute().apply()
     delete.from(Employee).toSQL.execute().apply()
