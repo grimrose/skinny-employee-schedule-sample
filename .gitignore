@@ -16,8 +16,6 @@ task/src/main/resources/
 build/target/
 standalone-build/
 
-# use glob syntax.
-syntax: glob
 *.ser
 *.class
 *~
@@ -66,3 +64,4 @@ ivy2
 
 bower_components
 .sbtconfig
+

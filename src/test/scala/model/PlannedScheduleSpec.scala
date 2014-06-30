@@ -1,16 +1,13 @@
 package model
 
-import skinny.{ ParamType, DBSettings }
-import skinny.test._
-import org.scalatest.fixture.FlatSpec
-import scalikejdbc._, SQLInterpolation._
+import org.scalatest.{ Matchers, fixture }
+import scalikejdbc._
 import scalikejdbc.scalatest._
-import org.joda.time._
-import org.scalatest.fixture
-import org.scalatest.matchers.ShouldMatchers
+import skinny.DBSettings
 import skinny.orm.Alias
+import skinny.test._
 
-class PlannedScheduleSpec extends fixture.FunSpec with ShouldMatchers with DBSettings with AutoRollback {
+class PlannedScheduleSpec extends fixture.FunSpec with Matchers with DBSettings with AutoRollback {
   override def fixture(implicit session: DBSession): Unit = {
     delete.from(PlannedSchedule).toSQL.execute().apply()
   }

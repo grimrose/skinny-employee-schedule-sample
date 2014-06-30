@@ -1,6 +1,7 @@
 // --------------------------------------------
 // sbt plugins for this Skinny app project
 // --------------------------------------------
+resolvers += Classpaths.sbtPluginReleases
 
 // --------
 // Scalatra sbt plugin
@@ -27,13 +28,15 @@ addSbtPlugin("com.mojolly.scalate" % "xsbt-scalate-generator" % "0.5.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
 
 // --------
-// scoverage for test coverage (./skinny test:coverage)
-// NOTE: 
-//   Disabled by default because scoverage 0.98 doesn't work with Skinny ORM
-//   (https://github.com/skinny-framework/skinny-framework/issues/97)
-//resolvers += Classpaths.sbtPluginReleases
-//addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.0")
+// IntelliJ IDEA
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
 
+// --------
+// scoverage for test coverage (./skinny test:coverage)
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.99.5.1")
+
+// --------
+// scalac options for sbt
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 // addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.6")

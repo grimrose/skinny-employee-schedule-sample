@@ -116,15 +116,11 @@ IF "%command%"=="test:coverage" (
 )
 
 IF "%command%"=="scalajs:watch" (
-  SET SUB_COMMAND="~;packageJS"
+  SET SUB_COMMAND="~;fastOptJS"
   GOTO scalajs_task
 )
 IF "%command%"=="scalajs:package" (
-  SET SUB_COMMAND="packageJS"
-  GOTO scalajs_task
-)
-IF "%command%"=="scalajs:optimize" (
-  SET SUB_COMMAND="optimizeJS"
+  SET SUB_COMMAND="fastOptJS"
   GOTO scalajs_task
 )
 
@@ -146,6 +142,7 @@ IF "%is_generator%"=="true" (
     SET generator_params=%generator_params:~1%
 
     RMDIR task\src\main\resources /S /q
+    RMDIR task\target /S /q
     MKDIR task\src\main\resources
     XCOPY src\main\resources task\src\main\resources /E /D /q
     sbt "task/run generate:%generator_params%"
@@ -155,6 +152,7 @@ IF "%is_generator%"=="true" (
 
 IF "%command%"=="db:migrate" (
   RMDIR task\src\main\resources /S /q
+  RMDIR task\target /S /q
   MKDIR task\src\main\resources
   XCOPY src\main\resources task\src\main\resources /E /D /q
   sbt "task/run db:migrate %2"
@@ -163,6 +161,7 @@ IF "%command%"=="db:migrate" (
 
 IF "%command%"=="db:repair" (
   RMDIR task\src\main\resources /S /q
+  RMDIR task\target /S /q
   MKDIR task\src\main\resources
   XCOPY src\main\resources task\src\main\resources /E /D /q
   sbt "task/run db:repair %2"
@@ -194,6 +193,7 @@ IF %command%==package (
   XCOPY src\* build\src\* /E /D /q
   xcopy build.sbt build\ /S /q
   RMDIR task\src\main\resources /S /q
+  RMDIR task\target /S /q
   MKDIR task\src\main\resources
   XCOPY src\main\resources task\src\main\resources /E /D /q
   sbt "task/run assets:precompile" "build/package"
@@ -203,15 +203,24 @@ IF %command%==package (
 IF "%command%"=="package:standalone" (
   IF NOT EXIST "project\_skinny_assembly.sbt" (
     ECHO addSbtPlugin^(^"com.eed3si9n^" %% ^"sbt-assembly^" %% ^"0.11.2^"^) > "project\_skinny_assembly.sbt"
-
-    SET SETTINGS_FILE="_skinny_assembly_settings.sbt"
-    ECHO import AssemblyKeys._ > "_skinny_assembly_settings.sbt"
-    ECHO. >> "_skinny_assembly_settings.sbt"
-    ECHO assemblySettings >> "_skinny_assembly_settings.sbt"
-    ECHO. >> "_skinny_assembly_settings.sbt"
-    ECHO mainClass in assembly := Some^(^"skinny.standalone.JettyLauncher^"^) >> "_skinny_assembly_settings.sbt"
-    ECHO. >> "_skinny_assembly_settings.sbt"
-    ECHO _root_.sbt.Keys.test in assembly := {} >> "_skinny_assembly_settings.sbt"
+    (
+      ECHO import AssemblyKeys._
+      ECHO.
+      ECHO assemblySettings
+      ECHO.
+      ECHO mainClass in assembly := Some^(^"skinny.standalone.JettyLauncher^"^)
+      ECHO.
+      ECHO _root_.sbt.Keys.test in assembly := {}
+      ECHO.
+      ECHO.resourceGenerators in Compile ^<+= ^(resourceManaged, baseDirectory^) ^map { ^(managedBase, base^) =^>
+      ECHO.  val webappBase = base / "src" / "main" / "webapp"
+      ECHO.  for ^( ^(from, to^) ^<- ^webappBase ** "*" `pair` rebase(webappBase, managedBase / "main/"^) ^)
+      ECHO.  yield {
+      ECHO.    Sync.copy^(from, to^)
+      ECHO.    to
+      ECHO.  }
+      ECHO.}
+    )> "_skinny_assembly_settings.sbt"
   )
   RMDIR standalone-build /S /q
   MKDIR standalone-build
@@ -219,6 +228,7 @@ IF "%command%"=="package:standalone" (
   XCOPY build.sbt standalone-build\ /q
   xcopy _skinny_assembly_settings.sbt standalone-build\ /q
   RMDIR task\src\main\resources /S /q
+  RMDIR task\target /S /q
   MKDIR task\src\main\resources
   XCOPY src\main\resources task\src\main\resources /E /D /q
   sbt "task/run assets:precompile" "standalone-build/assembly"
@@ -231,6 +241,7 @@ IF %command%==publish (
   xcopy src\* build\src\* /E /D /q
   xcopy build.sbt build\ /q
   RMDIR task\src\main\resources /S /q
+  RMDIR task\target /S /q
   MKDIR task\src\main\resources
   XCOPY src\main\resources task\src\main\resources /E /D /q
   sbt "task/run assets:precompile" "build/publish"
@@ -266,7 +277,6 @@ ECHO   publish            : will publish *.war file to repository
 ECHO.
 ECHO   scalajs:watch    : will watch Scala.js Scala code change and convert to JS
 ECHO   scalajs:package  : will convert Scala.js Scala code to JS file
-ECHO   scalajs:optimize : will optimize the huge JS file to optimized small JS
 ECHO.
 ECHO   eclipse       : will setup Scala IDE settings
 ECHO   idea/gen-idea : will setup IntelliJ IDEA settings
@@ -324,16 +334,16 @@ GOTO script_eof
 
 :scalajs_task
 IF NOT EXIST "project\_skinny_scalajs.sbt" (
-  ECHO addSbtPlugin^("org.scala-lang.modules.scalajs" %% "scalajs-sbt-plugin" %% "0.4.3"^) > "project\_skinny_scalajs.sbt"
+  ECHO addSbtPlugin^("org.scala-lang.modules.scalajs" %% "scalajs-sbt-plugin" %% "0.5.0"^) > "project\_skinny_scalajs.sbt"
 
   ECHO lazy val scalaJS = Project^(id = "scalajs", base = file^("src/main/webapp/WEB-INF/assets"^),  > "_skinny_scalajs_settings.sbt"
-  ECHO   settings = Defaults.defaultSettings ++ Seq^(      >> "_skinny_scalajs_settings.sbt"
+  ECHO   settings = Seq^(                                  >> "_skinny_scalajs_settings.sbt"
   ECHO     name := "application", // JavaScript file name  >> "_skinny_scalajs_settings.sbt"
   ECHO     unmanagedSourceDirectories in Compile ^<+= baseDirectory^(_ / "scala"^), >> "_skinny_scalajs_settings.sbt"
   ECHO     libraryDependencies ++= Seq^(                   >> "_skinny_scalajs_settings.sbt"
-  ECHO       "org.scala-lang.modules.scalajs" %%%% "scalajs-dom"                    %% "0.3", >> "_skinny_scalajs_settings.sbt"
-  ECHO       "org.scala-lang.modules.scalajs" %%%% "scalajs-jquery"                 %% "0.3", >> "_skinny_scalajs_settings.sbt"
-  ECHO       "org.scala-lang.modules.scalajs" %%%% "scalajs-jasmine-test-framework" %% "0.4.3" %% "test" >> "_skinny_scalajs_settings.sbt"
+  ECHO       "org.scala-lang.modules.scalajs" %%%%%% "scalajs-dom"                    %% "0.6", >> "_skinny_scalajs_settings.sbt"
+  ECHO       "org.scala-lang.modules.scalajs" %%%%%% "scalajs-jquery"                 %% "0.6", >> "_skinny_scalajs_settings.sbt"
+  ECHO       "org.scala-lang.modules.scalajs" %%%%  "scalajs-jasmine-test-framework" %% "0.5.0" %% "test" >> "_skinny_scalajs_settings.sbt"
   ECHO     ^), >> "_skinny_scalajs_settings.sbt"
   ECHO     crossTarget in Compile ^<^<= baseDirectory^(_ / ".." / ".." / "assets" / "js"^) >> "_skinny_scalajs_settings.sbt"
   ECHO   ^) >> "_skinny_scalajs_settings.sbt"

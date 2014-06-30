@@ -5,11 +5,10 @@ import _root_.model._
 import org.joda.time.LocalDate
 import org.scalatra.test.scalatest._
 import skinny.test._
-import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, FunSpec}
 import skinny.DBSettings
 
-class AssignmentsControllerSpec extends FunSpec with ShouldMatchers with DBSettings {
+class AssignmentsControllerSpec extends FunSpec with Matchers with DBSettings {
 
   def createMockController = new AssignmentsController with MockController
 
