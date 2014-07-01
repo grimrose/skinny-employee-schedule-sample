@@ -42,3 +42,4 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 // addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.6")
 // addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.4")
 
+addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")

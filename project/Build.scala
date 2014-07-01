@@ -9,6 +9,8 @@ import ScalateKeys._
 import scala.language.postfixOps
 import org.sbtidea.SbtIdeaPlugin._
 
+import scoverage.ScoverageSbtPlugin.{instrumentSettings => scoverageSettings}
+import CoverallsPlugin.coverallsSettings
 
 object SkinnyAppBuild extends Build {
 
@@ -25,7 +27,7 @@ object SkinnyAppBuild extends Build {
   val theScalaVersion = "2.11.1"
   val jettyVersion = "9.2.1.v20140609"
 
-  lazy val baseSettings = ScalatraPlugin.scalatraWithJRebel ++ herokuSettings ++ Seq(
+  lazy val baseSettings = ScalatraPlugin.scalatraWithJRebel ++ herokuSettings ++ scoverageSettings ++ coverallsSettings ++ Seq(
     organization := appOrganization,
     name         := appName,
     version      := appVersion,
