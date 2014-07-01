@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/grimrose/skinny-employee-schedule-sample.png?label=ready&title=Ready)](https://waffle.io/grimrose/skinny-employee-schedule-sample)
 ## employee schedule application on Skinny Framework
 
 [![Build Status](https://travis-ci.org/grimrose/skinny-employee-schedule-sample.svg?branch=master)](https://travis-ci.org/grimrose/skinny-employee-schedule-sample)
