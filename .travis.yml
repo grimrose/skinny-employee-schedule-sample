@@ -4,4 +4,4 @@ scala:
 
 before_script:
   - ./skinny db:migrate test
-script: ./skinny test
+script: ./skinny coveralls
