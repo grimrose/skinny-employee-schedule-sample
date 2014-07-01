@@ -1,7 +1,8 @@
-[![Stories in Ready](https://badge.waffle.io/grimrose/skinny-employee-schedule-sample.png?label=ready&title=Ready)](https://waffle.io/grimrose/skinny-employee-schedule-sample)
 ## employee schedule application on Skinny Framework
 
+[![Stories in Ready](https://badge.waffle.io/grimrose/skinny-employee-schedule-sample.png?label=ready&title=Ready)](https://waffle.io/grimrose/skinny-employee-schedule-sample)
 [![Build Status](https://travis-ci.org/grimrose/skinny-employee-schedule-sample.svg?branch=master)](https://travis-ci.org/grimrose/skinny-employee-schedule-sample)
+
 
 Run Skinny app now!
 
