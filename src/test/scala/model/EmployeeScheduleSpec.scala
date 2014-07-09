@@ -7,12 +7,6 @@ import skinny.test.FactoryGirl
 import skinny.{ DBSettings, ParamType, PermittedStrongParameters, StrongParameters }
 
 class EmployeeScheduleSpec extends fixture.FunSpec with Matchers with DBSettings with AutoRollback {
-  override def fixture(implicit session: DBSession): Unit = {
-    delete.from(EmployeeSchedule).toSQL.execute().apply()
-    delete.from(Employee).toSQL.execute().apply()
-    delete.from(Schedule).toSQL.execute().apply()
-    delete.from(PlannedSchedule).toSQL.execute().apply()
-  }
 
   describe("EmployeeSchedule") {
     it("should insert") { implicit session =>
@@ -22,7 +16,7 @@ class EmployeeScheduleSpec extends fixture.FunSpec with Matchers with DBSettings
       EmployeeSchedule.createWithAttributes('employeeId -> employee.id, 'scheduleId -> schedule.id)
 
       Employee.joins(Employee.schedulesRef).findById(employee.id).map(_.schedules).get.map(_.id) should equal(Seq(schedule.id))
-      Schedule.joins(Schedule.employeesRef).findById(schedule.id).map(_.employees).get.map(_.id) should be(Seq(employee.id))
+      Schedule.joins(Schedule.employeesRef).findById(schedule.id).map(_.employees).get.map(_.id) should equal(Seq(employee.id))
     }
     it("should insert by schedules") { implicit session =>
       val employee: Employee = FactoryGirl.apply(Employee).create()
@@ -41,7 +35,7 @@ class EmployeeScheduleSpec extends fixture.FunSpec with Matchers with DBSettings
       EmployeeSchedule.createWithAttributes('employeeId -> employee.id, 'scheduleId -> schedule.id)
 
       EmployeeSchedule.deleteByEmployeeIdAndScheduleId(employee.id, schedule.id) should be(1)
-      EmployeeSchedule.count() should be(0)
+      EmployeeSchedule.findByEmployeeIdAndScheduleId(employee.id, schedule.id).isDefined should equal(false)
     }
     it("should find by employee id and schedule id") { implicit session =>
       val employee: Employee = FactoryGirl.apply(Employee).create()
