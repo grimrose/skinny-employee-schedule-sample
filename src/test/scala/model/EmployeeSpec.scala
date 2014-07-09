@@ -9,15 +9,11 @@ import skinny.orm.Alias
 import skinny.test._
 
 class EmployeeSpec extends fixture.FunSpec with Matchers with DBSettings with AutoRollback {
-  override def fixture(implicit session: DBSession): Unit = {
-    deleteFrom(EmployeeSchedule).toSQL.execute().apply()
-    delete.from(Employee).toSQL.execute().apply()
-  }
 
   describe("Employee") {
     it("should insert") { implicit session =>
-      FactoryGirl.apply(Employee).create()
-      Employee.count() should be(1)
+      val employee = FactoryGirl.apply(Employee).create()
+      Employee.findById(employee.id).isDefined should equal(true)
     }
     it("should update") { implicit session =>
       val id: Long = FactoryGirl.apply(Employee).create().id

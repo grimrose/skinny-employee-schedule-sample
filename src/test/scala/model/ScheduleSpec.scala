@@ -8,11 +8,6 @@ import skinny.DBSettings
 import skinny.test._
 
 class ScheduleSpec extends fixture.FunSpec with Matchers with DBSettings with AutoRollback {
-  override def fixture(implicit session: DBSession): Unit = {
-    deleteFrom(EmployeeSchedule).toSQL.execute().apply()
-    delete.from(PlannedSchedule).toSQL.execute().apply()
-    delete.from(Schedule).toSQL.execute().apply()
-  }
 
   describe("Schedule") {
     it("should insert") { implicit session =>
