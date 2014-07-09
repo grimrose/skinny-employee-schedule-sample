@@ -1,6 +1,6 @@
 package controller
 
-import org.scalatest.{Matchers, FunSpec}
+import org.scalatest.{ Matchers, FunSpec }
 import skinny._
 import skinny.test._
 import org.joda.time._
