@@ -43,7 +43,7 @@ function copy_resources_to_task() {
 function setup_scalajs() {
   setting_file="${current_dir}/project/_skinny_scalajs.sbt"
   if [ ! -f "${setting_file}" ]; then
-    echo "addSbtPlugin(\"org.scala-lang.modules.scalajs\" % \"scalajs-sbt-plugin\" % \"0.5.0\")" > ${setting_file}
+    echo "addSbtPlugin(\"org.scala-lang.modules.scalajs\" % \"scalajs-sbt-plugin\" % \"0.5.1\")" > ${setting_file}
 
     echo "lazy val scalaJS = Project(id = \"scalajs\", base = file(\"src/main/webapp/WEB-INF/assets\"),
   settings = Seq(
@@ -52,7 +52,7 @@ function setup_scalajs() {
     libraryDependencies ++= Seq(
       \"org.scala-lang.modules.scalajs\" %%% \"scalajs-dom\"                    % \"0.6\",
       \"org.scala-lang.modules.scalajs\" %%% \"scalajs-jquery\"                 % \"0.6\",
-      \"org.scala-lang.modules.scalajs\" %%  \"scalajs-jasmine-test-framework\" % \"0.5.0\" % \"test\"
+      \"org.scala-lang.modules.scalajs\" %%  \"scalajs-jasmine-test-framework\" % \"0.5.1\" % \"test\"
     ),
     crossTarget in Compile <<= baseDirectory(_ / \"..\" / \"..\" / \"assets\" / \"js\")
   )
@@ -135,10 +135,6 @@ elif [ "$command" == "eclipse" ];then
   fi
   ${sbt_path} eclipse
 elif [ "$command" == "idea" -o "$command" == "gen-idea" ];then
-  setting_file="${current_dir}/project/_skinny_idea.sbt"
-  if [ ! -f "${setting_file}" ]; then
-    echo "addSbtPlugin(\"com.github.mpeltonen\" % \"sbt-idea\" % \"1.6.0\")" > ${setting_file} 
-  fi
   ${sbt_path} gen-idea
 elif [ "$command" == "package" ];then
   setup_build
@@ -173,6 +169,11 @@ resourceGenerators in Compile <+= (resourceManaged, baseDirectory) map { (manage
   rm -fr standalone-build/src/main/webapp/WEB-INF/assets
   mv standalone-build/src/main/webapp/assets standalone-build/src/main/webapp/WEB-INF/
   ${sbt_path} standalone-build/assembly
+elif [ "$command" == "heroku:init" ];then
+  echo "web: heroku/run" > Procfile
+  echo "java.runtime.version=1.7" > system.properties
+  echo "Heroku deployment settings are prepared."
+
 elif [ "$command" == "publish" ];then
   setup_build
   copy_resources_to_task
@@ -207,6 +208,8 @@ else
   echo ""
   echo "  eclipse       : will setup Scala IDE settings"
   echo "  idea/gen-idea : will setup IntelliJ IDEA settings"
+  echo ""
+  echo "  heroku:init   : will setup Heroku deployment settings"
   echo ""
   echo "  g/generate controller : will generate controller"
   echo "  g/generate model      : will generate model"

@@ -9,7 +9,6 @@ import ScalateKeys._
 import scala.language.postfixOps
 import org.sbtidea.SbtIdeaPlugin._
 
-
 object SkinnyAppBuild extends Build {
 
   // -------------------------------------------------------
@@ -20,7 +19,7 @@ object SkinnyAppBuild extends Build {
   val appName = "skinny-human-schedule"
   val appVersion = "0.1.0-SNAPSHOT"
 
-  val skinnyVersion = "1.1.1"
+  val skinnyVersion = "1.1.6"
   val scalatraVersion = "2.3.0"
   val theScalaVersion = "2.11.1"
   val jettyVersion = "9.2.1.v20140609"
@@ -140,6 +139,7 @@ object SkinnyAppBuild extends Build {
   // -------------------------------------------------------
   // Deployment on Heroku
   // -------------------------------------------------------
+  // Run "./skinny heroku:init"
 
   lazy val stage = taskKey[Unit]("Dummy stage task to keep Heroku happy")
   lazy val herokuSettings = Seq(stage := { "heroku/stage" ! })

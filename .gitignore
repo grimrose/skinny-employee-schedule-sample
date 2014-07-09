@@ -64,4 +64,5 @@ ivy2
 
 bower_components
 .sbtconfig
+node_modules
 
